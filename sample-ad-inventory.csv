@@ -1,0 +1,9 @@
+Name,DNSHostName,IPv4Address,OperatingSystem,Owner,Enclave,Description
+SQL01,sql01.range.mil,10.20.30.15,Windows Server 2022 Standard,Database Team,ALPHA,Mission database server
+FILE01,file01.range.mil,10.20.30.20,Windows Server 2019 Standard,Infrastructure Team,ALPHA,File and print services
+DC01,dc01.range.mil,10.20.30.30,Windows Server 2022 Datacenter,Directory Services,ALPHA,Domain controller
+SPLUNKIDX01,splunk-idx01.range.mil,10.20.40.9,Red Hat Enterprise Linux 9,Cyber Operations,MGMT,Splunk indexer
+NETMON01,netmon01.range.mil,10.20.40.5,Red Hat Enterprise Linux 9,Network Team,MGMT,SNMP network monitoring
+DNS01,dns01.range.mil,10.20.5.10,Red Hat Enterprise Linux 9,Infrastructure Team,CORE,Authoritative DNS
+WKS050,wks-050.range.mil,10.20.10.50,Windows 11 Enterprise,Operations,ALPHA,Analyst workstation
+WKS077,splunk-fwd-77.range.mil,10.20.10.77,Windows 11 Enterprise,Cyber Operations,ALPHA,Forwarder test workstation

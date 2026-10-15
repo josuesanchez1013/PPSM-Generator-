@@ -1,0 +1,21 @@
+lease 10.20.10.60 {
+  starts 4 2026/01/01 08:00:00;
+  ends 4 2026/01/02 08:00:00;
+  binding state active;
+  hardware ethernet 00:11:22:33:44:60;
+  client-hostname "wks-060";
+}
+lease 10.20.10.62 {
+  starts 4 2026/01/01 08:15:00;
+  ends 4 2026/01/02 08:15:00;
+  binding state active;
+  hardware ethernet 00:11:22:33:44:62;
+  client-hostname "wks-062";
+}
+lease 10.20.10.91 {
+  starts 4 2026/01/01 09:02:00;
+  ends 4 2026/01/02 09:02:00;
+  binding state active;
+  hardware ethernet 00:11:22:33:44:91;
+  client-hostname "printer-lab-01";
+}

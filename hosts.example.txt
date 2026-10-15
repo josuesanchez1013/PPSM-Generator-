@@ -1,0 +1,10 @@
+# Host list for the collectors — one host per line.
+#   Windows:  .\ppsm-collect.ps1 -ComputerListFile hosts.txt
+#   Linux:    sudo ./ppsm-collect.sh -H hosts.txt
+# Lines starting with # are ignored. Short names, FQDNs and addresses all work;
+# use whatever resolves from the collecting machine.
+# Copy this file to hosts.txt (which is ignored by git) and fill it in.
+
+dc01.range2.mil
+wsus11
+172.22.40.12

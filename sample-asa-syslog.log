@@ -1,0 +1,4 @@
+Jan 01 2026 09:15:02 fw-01 : %ASA-6-302013: Built outbound TCP connection 8891 for outside:74.125.24.100/443 (74.125.24.100/443) to inside:10.20.10.50/54321 (10.20.10.50/54321)
+Jan 01 2026 09:15:03 fw-01 : %ASA-6-302015: Built inbound UDP connection 8892 for outside:10.20.5.10/53 (10.20.5.10/53) to inside:10.20.10.50/51234 (10.20.10.50/51234)
+Jan 01 2026 09:15:07 fw-01 : %ASA-6-302013: Built outbound TCP connection 8893 for dmz:10.20.30.15/1433 (10.20.30.15/1433) to inside:10.20.10.50/52000 (10.20.10.50/52000)
+Jan 01 2026 09:15:11 fw-01 : %ASA-6-302013: Built outbound TCP connection 8894 for mgmt:10.20.40.9/9997 (10.20.40.9/9997) to inside:10.20.10.77/41000 (10.20.10.77/41000)

@@ -1,0 +1,21 @@
+# Normalise line endings in the repository; check out per platform convention.
+* text=auto
+
+# PowerShell is happiest with CRLF; shell scripts and YAML must be LF.
+*.ps1  text eol=crlf
+*.sh   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Sample inputs keep the line endings they were captured with.
+samples/** -text
+
+# Binary
+*.pcap   binary
+*.pcapng binary
+*.pdf    binary
+*.xlsx   binary
+*.png    binary
+
+# Keep the single-file builder out of diffs by default (it is 650 KB).
+app/ppsm-builder.html -diff

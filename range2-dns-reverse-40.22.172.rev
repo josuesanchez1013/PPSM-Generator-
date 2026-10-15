@@ -1,0 +1,5 @@
+$ORIGIN 40.22.172.in-addr.arpa.
+11   IN PTR wsus11.range2.mil.
+12   IN PTR oradb12.range2.mil.
+44   IN PTR vendor44.range2.mil.
+99   IN PTR legacy99.range2.mil.

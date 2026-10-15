@@ -1,0 +1,8 @@
+#separator \x09
+#path	conn
+#fields	ts	uid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	proto	service	duration	orig_bytes	resp_bytes	conn_state	history
+1767398400.1	Cz1	172.22.14.61	51002	140.82.121.4	443	tcp	ssl	9.2	4100	40020	SF	ShADadFf
+1767398401.2	Cz2	172.22.14.62	50441	172.22.40.12	1521	tcp	-	3.4	2200	69030	SF	ShADadFf
+1767398402.3	Cz3	172.22.14.99	40001	172.22.40.12	3306	tcp	-	0.0	0	0	S0	S
+1767398403.4	Cz4	172.22.14.99	40002	172.22.40.12	5432	tcp	-	0.0	0	0	REJ	Sr
+1767398404.5	Cz5	172.22.14.70	52990	172.22.60.9	9997	tcp	-	880.0	990000	8210	SF	ShADadFf

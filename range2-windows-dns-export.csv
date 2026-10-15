@@ -1,0 +1,5 @@
+HostName,RecordType,ZoneName,IPv4Address,PtrDomainName,HostNameAlias
+syslog05,A,range2.mil,172.22.60.5,,
+splidx09,A,range2.mil,172.22.60.9,,
+77,PTR,40.22.172.in-addr.arpa,,backup77.range2.mil.,
+logs,CNAME,range2.mil,,,splidx09.range2.mil.

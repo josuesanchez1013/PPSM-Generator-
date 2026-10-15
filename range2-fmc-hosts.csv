@@ -1,0 +1,8 @@
+Network Discovery - Hosts
+IP Address,MAC Address,NetBIOS Name,Host Criticality,OS Vendor,OS Name,OS Version,Last Seen
+172.22.40.11,00:11:22:33:44:11,WSUS11,High,Microsoft,Windows Server,2022,2026-02-02
+172.22.40.12,00:11:22:33:44:12,ORADB12,High,Oracle,Oracle Linux,9,2026-02-02
+172.22.40.20,00:11:22:33:44:20,ADDC20,High,Microsoft,Windows Server,2022,2026-02-02
+172.22.40.44,00:11:22:33:44:44,VENDOR44,Medium,,Appliance OS,4.2,2026-02-02
+172.22.40.99,00:11:22:33:44:99,LEGACY99,Low,Microsoft,Windows Server,2012,2026-01-15
+172.22.40.77,00:11:22:33:44:77,BACKUP77,Medium,,Linux,,2026-01-20

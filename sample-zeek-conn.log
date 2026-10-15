@@ -1,0 +1,7 @@
+#separator \x09
+#path	conn
+#fields	ts	uid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	proto	service	duration	orig_bytes	resp_bytes	orig_pkts	resp_pkts
+1767225600.1	Ca1	10.20.10.50	54321	74.125.24.100	443	tcp	ssl	12.4	5200	49031	44	88
+1767225601.2	Ca2	10.20.10.50	51234	10.20.5.10	53	udp	dns	0.1	88	1200	1	1
+1767225602.3	Ca3	10.20.10.77	41000	10.20.40.9	9997	tcp	-	900.0	770000	4512	2100	101
+1767225603.4	Ca4	10.20.10.55	52233	10.20.30.30	389	tcp	-	2.2	2200	2200	18	18

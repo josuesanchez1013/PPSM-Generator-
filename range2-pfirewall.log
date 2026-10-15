@@ -1,0 +1,7 @@
+#Version: 1.5
+#Software: Microsoft Windows Firewall
+#Fields: date time action protocol src-ip dst-ip src-port dst-port size tcpflags tcpsyn tcpack tcpwin icmptype icmpcode info path
+
+2026-02-02 08:11:04 ALLOW TCP 172.22.14.61 172.22.40.11 51188 8530 0 - 0 0 0 - - - SEND
+2026-02-02 08:11:09 ALLOW UDP 172.22.14.61 172.22.40.30 38771 123 0 - 0 0 0 - - - SEND
+2026-02-02 08:12:41 DROP TCP 172.22.14.99 172.22.14.61 40010 3389 0 - 0 0 0 - - - RECEIVE

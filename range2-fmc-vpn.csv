@@ -1,0 +1,4 @@
+Site-to-Site VPN
+VPN Topology,Local IP,Peer IP,Tunnel Status,Tunnel Type,Last Change
+RANGE2-to-HQ,172.22.1.1,198.51.100.7,UP,IPSEC,2026-02-01
+RANGE2-to-DR,172.22.1.1,198.51.100.9,UP,IPSEC,2026-01-28

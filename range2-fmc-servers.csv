@@ -1,0 +1,10 @@
+Servers
+Report generated: 2026-02-02
+IP Address,Port,Protocol,Server,Application Protocol,Vendor,Version,Hits,Last Used
+172.22.40.11,8530,6,wsus,HTTP,Microsoft,10.0,1840,2026-02-02 08:11
+172.22.40.12,1521,6,oracle,Oracle TNS,Oracle,19c,412,2026-02-02 08:12
+172.22.40.20,636,6,ldaps,LDAPS,Microsoft,2022,74,2026-02-02 08:14
+172.22.40.20,389,6,ldap,LDAP,Microsoft,2022,3,2026-01-30 11:02
+172.22.40.44,8443,6,https-alt,HTTPS,VendorCo,4.2,131,2026-02-02 08:18
+172.22.60.9,9997,6,splunkd,,Splunk,9.1,2201,2026-02-02 08:29
+172.22.40.30,123,17,ntpd,NTP,,4.2.8,12,2026-02-02 08:09

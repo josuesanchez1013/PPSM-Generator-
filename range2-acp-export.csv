@@ -1,0 +1,8 @@
+Rule Name,Action,Enabled,Source Networks,Destination Networks,Destination Ports
+Allow-WSUS,Allow,True,172.22.14.0/24,172.22.40.11,TCP/8530
+Allow-Oracle,Allow,True,172.22.14.0/24,172.22.40.12,TCP/1521
+Allow-Splunk-Fwd,Allow,True,172.22.14.70,172.22.60.9,TCP/9997
+Allow-Vendor-GUI,Allow,True,any,172.22.40.44,TCP/8443
+Allow-DirSvc,Allow,True,172.22.14.0/24,172.22.40.20,TCP/636; TCP/389
+Block-Legacy-SMB,Block,True,any,any,TCP/445
+Allow-Unused-Backup,Allow,True,172.22.14.0/24,172.22.40.77,TCP/10000

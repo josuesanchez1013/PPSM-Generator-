@@ -1,0 +1,26 @@
+# Collector output and working data — never commit real enclave data
+ppsm-results/
+ppsm-selftest/
+*.session.json
+*-register.xlsx
+*-register.csv
+* - eMASS PPSM Template.xlsx
+* - eMASS PPSM Template.csv
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archives of the repository itself
+*.zip
+
+# Local host lists and inventories (contain real host names)
+collectors/hosts.txt
+collectors/ansible/inventory.ini
+hosts.txt
+inventory.ini

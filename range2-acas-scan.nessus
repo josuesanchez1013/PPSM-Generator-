@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<NessusClientData_v2>
+<Policy><policyName>ACAS Credentialed Scan - RANGE2</policyName></Policy>
+<Report name="RANGE2 Monthly">
+<ReportHost name="172.22.40.12">
+<HostProperties>
+<tag name="HOST_END">Mon Feb  2 09:12:00 2026</tag>
+<tag name="host-ip">172.22.40.12</tag>
+<tag name="host-fqdn">oradb12.range2.mil</tag>
+<tag name="host-rdns">oradb12.range2.mil</tag>
+<tag name="netbios-name">ORADB12</tag>
+<tag name="mac-address">00:11:22:33:44:12</tag>
+<tag name="operating-system">Oracle Linux Server 9.3</tag>
+<tag name="system-type">general-purpose</tag>
+<tag name="HOST_START">Mon Feb  2 09:02:00 2026</tag>
+</HostProperties>
+<ReportItem port="0" svc_name="general" protocol="tcp" severity="0" pluginID="19506" pluginName="Nessus Scan Information">
+<plugin_output>Information about this scan :
+Nessus version : 10.7.2
+Scanner IP : 172.22.60.20
+Credentialed checks : yes
+Scan policy used : ACAS Credentialed Scan
+Scan duration : 600 sec
+</plugin_output></ReportItem>
+<ReportItem port="0" svc_name="general" protocol="tcp" severity="0" pluginID="24272" pluginName="Network Interfaces Enumeration (SSH)">
+<plugin_output>The following interfaces were enumerated :
+ - ens192 : IPAddress : 172.22.40.12
+ - ens224 : IPAddress : 172.22.41.12
+</plugin_output></ReportItem>
+<ReportItem port="1521" svc_name="oracle_tns" protocol="tcp" severity="0" pluginID="22964" pluginName="Service Detection">
+<plugin_output>An Oracle TNS Listener is running on this port.
+Oracle Database 19c Enterprise Edition
+</plugin_output></ReportItem>
+<ReportItem port="22" svc_name="ssh" protocol="tcp" severity="0" pluginID="22964" pluginName="Service Detection">
+<plugin_output>An SSH server is running on this port.
+OpenSSH_8.7
+</plugin_output></ReportItem>
+<ReportItem port="1521" svc_name="oracle_tns" protocol="tcp" severity="0" pluginID="56984" pluginName="SSL / TLS Versions Supported">
+<plugin_output>This port supports TLSv1.2/TLSv1.3.</plugin_output></ReportItem>
+<ReportItem port="0" svc_name="general" protocol="tcp" severity="0" pluginID="14272" pluginName="Netstat Portscanner (SSH)">
+<plugin_output>Netstat found the following open ports :
+tcp   LISTEN 0 128    0.0.0.0:1521   0.0.0.0:*   users:(("tnslsnr",pid=900,fd=8))
+tcp   LISTEN 0 128    0.0.0.0:22     0.0.0.0:*   users:(("sshd",pid=1100,fd=3))
+tcp   ESTAB  0 0    172.22.40.12:1521  172.22.14.62:50441  users:(("tnslsnr",pid=900,fd=9))
+</plugin_output></ReportItem>
+</ReportHost>
+<ReportHost name="172.22.40.44">
+<HostProperties>
+<tag name="host-ip">172.22.40.44</tag>
+<tag name="netbios-name">VENDOR44</tag>
+<tag name="operating-system">Appliance OS 4.2</tag>
+<tag name="system-type">embedded</tag>
+</HostProperties>
+<ReportItem port="0" svc_name="general" protocol="tcp" severity="0" pluginID="19506" pluginName="Nessus Scan Information">
+<plugin_output>Credentialed checks : no</plugin_output></ReportItem>
+<ReportItem port="8443" svc_name="www" protocol="tcp" severity="0" pluginID="22964" pluginName="Service Detection">
+<plugin_output>A web server is running on this port through SSL.
+nginx/1.24.0
+</plugin_output></ReportItem>
+<ReportItem port="8443" svc_name="www" protocol="tcp" severity="0" pluginID="10863" pluginName="SSL Certificate Information">
+<plugin_output>Subject Name: CN=vendor44.range2.mil</plugin_output></ReportItem>
+</ReportHost>
+</Report>
+</NessusClientData_v2>

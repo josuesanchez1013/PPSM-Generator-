@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PPSM Builder — Standard Operating Procedure</title>
+<style>
+:root{
+  --paper:#eef2f4;
+  --surface:#ffffff;
+  --surface-2:#f4f7f8;
+  --ink:#14202b;
+  --ink-2:#42535f;
+  --muted:#67788a;
+  --rule:#d3dde3;
+  --rule-soft:#e3eaee;
+  --cross:#b8791a;
+  --cross-bg:#fdf4e3;
+  --internal:#0f7a6c;
+  --internal-bg:#e6f4f1;
+  --alert:#a8342a;
+  --alert-bg:#fbeceb;
+  --code-bg:#132029;
+  --code-ink:#dfe9ef;
+  --code-key:#7fd1c1;
+  --shadow:0 1px 0 rgba(20,32,43,.06);
+}
+html[data-theme="dark"]{
+  --paper:#0e161c;
+  --surface:#151f27;
+  --surface-2:#1a262f;
+  --ink:#e7eef3;
+  --ink-2:#b6c5d0;
+  --muted:#8ba0af;
+  --rule:#28363f;
+  --rule-soft:#212e37;
+  --cross:#e3ab4d;
+  --cross-bg:#2a2213;
+  --internal:#48c4b1;
+  --internal-bg:#122b28;
+  --alert:#e88a80;
+  --alert-bg:#2c1815;
+  --code-bg:#0b1218;
+  --code-ink:#dfe9ef;
+  --code-key:#7fd1c1;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+:focus-visible{outline:2px solid var(--internal);outline-offset:2px;border-radius:3px}
+
+/* ---------- top bar ---------- */
+.bar{
+  position:sticky;top:0;z-index:40;
+  background:var(--surface);
+  border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;gap:14px;
+  padding:10px 20px;
+}
+.bar h1{
+  font-size:15px;font-weight:700;margin:0;letter-spacing:-.01em;white-space:nowrap;
+}
+.bar h1 span{color:var(--muted);font-weight:400}
+.spacer{flex:1}
+.search{
+  position:relative;flex:0 1 320px;min-width:130px;
+}
+.search input{
+  width:100%;font:inherit;font-size:14px;
+  padding:7px 30px 7px 11px;
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--rule);border-radius:6px;
+}
+.search input::placeholder{color:var(--muted)}
+.search button{
+  position:absolute;right:4px;top:4px;
+  width:24px;height:24px;line-height:1;
+  border:0;background:transparent;color:var(--muted);
+  font-size:16px;cursor:pointer;border-radius:4px;display:none;
+}
+.search.has-value button{display:block}
+.btn{
+  font:inherit;font-size:13.5px;
+  padding:7px 12px;border-radius:6px;
+  border:1px solid var(--rule);background:var(--surface-2);color:var(--ink-2);
+  cursor:pointer;white-space:nowrap;
+}
+.btn:hover{color:var(--ink);border-color:var(--muted)}
+.hits{font-size:13px;color:var(--muted);white-space:nowrap}
+
+/* ---------- layout ---------- */
+.wrap{display:grid;grid-template-columns:284px minmax(0,1fr);gap:0;max-width:1240px;margin:0 auto}
+nav.rail{
+  position:sticky;top:53px;align-self:start;height:calc(100vh - 53px);
+  overflow-y:auto;padding:22px 18px 60px;
+  border-right:1px solid var(--rule);background:var(--paper);
+}
+.progress{margin-bottom:20px}
+.progress .track{height:5px;background:var(--rule);border-radius:3px;overflow:hidden}
+.progress .fill{height:100%;width:0;background:var(--internal);transition:width .25s ease}
+.progress p{margin:8px 0 0;font-size:12.5px;color:var(--muted)}
+.rail h2{
+  font-size:12px;font-weight:700;color:var(--muted);
+  margin:20px 0 8px;letter-spacing:.02em;
+}
+.rail ol,.rail ul{list-style:none;margin:0;padding:0}
+.rail a{
+  display:block;padding:5px 10px 5px 12px;border-radius:5px;
+  font-size:14px;color:var(--ink-2);text-decoration:none;
+  border-left:2px solid transparent;
+}
+.rail a:hover{background:var(--surface);color:var(--ink)}
+.rail a.active{background:var(--surface);color:var(--ink);font-weight:600;border-left-color:var(--internal)}
+.rail li.done > a::after{content:"✓";float:right;color:var(--internal);font-weight:700}
+.rail a.dim{opacity:.32}
+.rail .num{display:inline-block;width:20px;color:var(--muted);font-variant-numeric:tabular-nums}
+main{padding:34px 46px 120px;max-width:980px}
+
+/* ---------- hero ---------- */
+.hero{border-bottom:1px solid var(--rule);padding-bottom:26px;margin-bottom:34px}
+.hero h1{
+  font-size:clamp(30px,4.6vw,42px);line-height:1.08;letter-spacing:-.028em;
+  font-weight:700;margin:0 0 12px;
+}
+.hero p.lede{font-size:18.5px;color:var(--ink-2);margin:0 0 20px;max-width:62ch}
+.facts{display:flex;flex-wrap:wrap;gap:10px}
+.fact{
+  font-size:13px;color:var(--ink-2);background:var(--surface);
+  border:1px solid var(--rule);border-radius:20px;padding:5px 13px;
+}
+.fact b{font-weight:600;color:var(--ink)}
+
+/* ---------- sections ---------- */
+section{margin:0 0 46px}
+h2.sec{
+  font-size:24px;letter-spacing:-.02em;font-weight:700;
+  margin:0 0 4px;padding-top:6px;
+}
+h3{font-size:18px;font-weight:650;letter-spacing:-.01em;margin:30px 0 8px}
+h4{font-size:15.5px;font-weight:650;margin:22px 0 6px;color:var(--ink)}
+p{margin:0 0 14px;max-width:72ch}
+ul,ol{margin:0 0 16px;padding-left:22px;max-width:72ch}
+li{margin:0 0 7px}
+li>ul{margin-top:7px}
+code{
+  font-family:Consolas,"Cascadia Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  font-size:.88em;background:var(--surface-2);border:1px solid var(--rule-soft);
+  padding:1px 5px;border-radius:4px;word-break:break-word;
+}
+
+/* ---------- step spine ---------- */
+.step{
+  position:relative;background:var(--surface);
+  border:1px solid var(--rule);border-left:4px solid var(--rule);
+  border-radius:8px;padding:22px 26px 8px;margin:0 0 18px;box-shadow:var(--shadow);
+}
+.step.done{border-left-color:var(--internal)}
+.step-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px}
+.step-num{
+  flex:none;width:30px;height:30px;border-radius:50%;
+  border:1px solid var(--rule);background:var(--surface-2);
+  display:grid;place-items:center;font-size:14px;font-weight:700;
+  font-variant-numeric:tabular-nums;color:var(--ink-2);margin-top:2px;
+}
+.step.done .step-num{background:var(--internal);border-color:var(--internal);color:#fff}
+html[data-theme="dark"] .step.done .step-num{color:#08201d}
+.step-head h3{margin:0;font-size:20px;font-weight:700;letter-spacing:-.015em;flex:1}
+.step-foot{
+  border-top:1px solid var(--rule-soft);margin-top:20px;padding:12px 0;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.mark{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  font-size:14px;color:var(--ink-2);user-select:none;
+}
+.mark input{width:17px;height:17px;accent-color:var(--internal);cursor:pointer;margin:0}
+.step.done .mark{color:var(--internal);font-weight:600}
+.next{margin-left:auto;font-size:13.5px;color:var(--muted);text-decoration:none}
+.next:hover{color:var(--ink)}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:3px solid var(--rule);background:var(--surface-2);
+  padding:12px 16px;margin:0 0 16px;border-radius:0 6px 6px 0;font-size:15px;
+}
+.note p:last-child{margin-bottom:0}
+.note.warn{border-left-color:var(--cross);background:var(--cross-bg)}
+.note.ok{border-left-color:var(--internal);background:var(--internal-bg)}
+.note.tip{border-left-color:var(--muted)}
+.note .lbl{font-weight:700;color:var(--ink)}
+
+/* ---------- code blocks ---------- */
+.cmd{margin:0 0 16px;border-radius:7px;overflow:hidden;border:1px solid var(--rule)}
+.cmd .cmd-bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface-2);border-bottom:1px solid var(--rule);
+  padding:6px 8px 6px 12px;font-size:12.5px;color:var(--muted);
+}
+.cmd .cmd-bar .os{font-weight:650;color:var(--ink-2)}
+.cmd .copy{
+  margin-left:auto;font:inherit;font-size:12.5px;
+  border:1px solid var(--rule);background:var(--surface);color:var(--ink-2);
+  padding:3px 9px;border-radius:5px;cursor:pointer;
+}
+.cmd .copy:hover{color:var(--ink);border-color:var(--muted)}
+.cmd .copy.copied{color:var(--internal);border-color:var(--internal)}
+.cmd pre{
+  margin:0;padding:12px 14px;background:var(--code-bg);color:var(--code-ink);
+  font-family:Consolas,"Cascadia Mono",ui-monospace,"DejaVu Sans Mono",monospace;
+  font-size:13.5px;line-height:1.6;overflow-x:auto;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+}
+
+/* ---------- collection method picker ---------- */
+.pathpick{display:flex;gap:10px;margin:0 0 10px;flex-wrap:wrap}
+.pathbtn{flex:1 1 200px;text-align:left;font:inherit;cursor:pointer;
+  border:1px solid var(--rule);border-radius:8px;background:var(--surface);
+  color:var(--ink-2);padding:11px 14px;transition:border-color .12s,background .12s}
+.pathbtn b{display:block;font-size:14.5px;color:var(--ink)}
+.pathbtn span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.pathbtn:hover{border-color:var(--muted)}
+.pathbtn.on{border-color:var(--internal);background:var(--internal-bg);border-width:2px;padding:10px 13px}
+.pathbtn.on b{color:var(--ink)}
+
+.run-group{list-style:none;margin:18px 0 10px;padding:0 0 6px;
+  border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.run-group:first-child{margin-top:4px}
+.run-group span{font-size:13px;font-weight:700;letter-spacing:.03em;color:var(--ink)}
+.run-group em{font-style:normal;font-size:12.5px;color:var(--muted)}
+
+.ipnote{border-left:3px solid var(--accent);background:var(--surface-2);border-radius:0 6px 6px 0;
+  padding:9px 12px;margin:10px 0}
+.ipnote-h{display:block;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:4px}
+.ipnote p{margin:0;font-size:13px;line-height:1.55}
+
+/* ---------- device badges ---------- */
+.dev{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:5px;
+  border:1px solid transparent}
+.dev-host-win{background:rgba(88,140,200,.14);color:#4b7fb5;border-color:rgba(88,140,200,.35)}
+.dev-host-nix{background:rgba(72,196,177,.14);color:#2e8d80;border-color:rgba(72,196,177,.38)}
+.dev-fw{background:rgba(227,171,77,.16);color:#a1741c;border-color:rgba(227,171,77,.42)}
+.dev-sw{background:rgba(160,120,200,.14);color:#7a58a8;border-color:rgba(160,120,200,.35)}
+.dev-dc{background:rgba(88,140,200,.14);color:#4b7fb5;border-color:rgba(88,140,200,.35)}
+.dev-fmc{background:rgba(227,120,77,.14);color:#b0572b;border-color:rgba(227,120,77,.4)}
+html[data-theme="dark"] .dev-fmc{color:#f0a07a}
+.dev-ctrl{background:rgba(140,150,160,.16);color:#5d6b76;border-color:rgba(140,150,160,.4)}
+.dev-wks{background:rgba(140,150,160,.16);color:#5d6b76;border-color:rgba(140,150,160,.4)}
+html[data-theme="dark"] .dev-host-win{color:#8ab4e8}
+html[data-theme="dark"] .dev-host-nix{color:#6fd8c6}
+html[data-theme="dark"] .dev-fw{color:#e3ab4d}
+html[data-theme="dark"] .dev-sw{color:#c0a0e0}
+html[data-theme="dark"] .dev-dc{color:#8ab4e8}
+html[data-theme="dark"] .dev-ctrl,html[data-theme="dark"] .dev-wks{color:#a8b6c2}
+.os-dev{font-weight:800;letter-spacing:.05em;font-size:11px;color:var(--ink);
+  border-right:1px solid var(--rule);padding-right:8px;margin-right:2px}
+
+/* ---------- files reference ---------- */
+table.files td{vertical-align:top}
+table.files td:first-child strong{display:inline-block;margin-top:4px}
+table.files .saveas{margin-top:5px;font-size:12px;color:var(--muted)}
+table.files tr.fgroup td{background:var(--surface-2);font-weight:700;font-size:12.5px;
+  letter-spacing:.02em;color:var(--ink-2);padding-top:9px;padding-bottom:7px}
+table.files tr.fgroup td span{color:var(--ink);text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+
+/* ---------- run cards ---------- */
+.runlist{list-style:none;margin:0 0 6px;padding:0;counter-reset:run}
+.run{position:relative;border:1px solid var(--rule);border-left:4px solid var(--rule);
+  border-radius:8px;background:var(--surface);margin:0 0 14px;padding:14px 16px 12px 16px}
+.run.done{border-left-color:var(--internal);background:var(--internal-bg)}
+.run.na{border-left-color:var(--muted);opacity:.62}
+.run-h{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.run-n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--surface-2);
+  border:1px solid var(--rule);color:var(--ink-2);font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+.run.done .run-n{background:var(--internal);border-color:var(--internal);color:#08201d}
+.run-t{flex:1 1 240px;min-width:0}
+.run-t b{display:block;font-size:15px;line-height:1.35}
+.run-where{font-size:12.5px;color:var(--muted);margin-top:2px}
+.run-where .pin{color:var(--ink-2);font-weight:650}
+.run-marks{flex:0 0 auto;display:flex;gap:14px;align-items:center;padding-top:2px}
+.run-marks label{font-size:12.5px;color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;gap:5px;white-space:nowrap}
+.run-marks input{cursor:pointer}
+.run.done .run-marks .m-done{color:var(--internal);font-weight:650}
+.run.na .run-marks .m-na{color:var(--ink-2);font-weight:650}
+.run-body{margin-top:11px}
+.run-body .cmd{margin-bottom:10px}
+.run-gives{font-size:13.5px;color:var(--ink-2);border-top:1px dashed var(--rule-soft);
+  padding-top:9px;margin-top:2px}
+.run-gives b{color:var(--ink)}
+.runbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--rule);border-radius:8px;background:var(--surface-2);
+  padding:10px 14px;margin:0 0 16px;font-size:13px;color:var(--ink-2)}
+.runbar .runcount{font-weight:700;color:var(--ink)}
+.runbar button{font:inherit;font-size:12.5px;border:1px solid var(--rule);
+  background:var(--surface);color:var(--ink-2);padding:4px 10px;border-radius:5px;
+  cursor:pointer;margin-left:auto}
+.runbar button:hover{color:var(--ink);border-color:var(--muted)}
+@media print{.run-marks input{-webkit-appearance:none;appearance:none;
+  width:12px;height:12px;border:1px solid #000;display:inline-block}
+  .run.na{opacity:1}}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:0 0 18px;border:1px solid var(--rule);border-radius:7px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+/* Only the two-column reference tables want a wide first column. Applying it
+   to every table squashed anything with more columns and pushed the page
+   sideways. */
+.kv td:first-child{font-weight:600;width:31%;min-width:150px}
+table{table-layout:auto;max-width:100%}
+td,th{overflow-wrap:anywhere}
+td code{background:var(--paper)}
+
+/* ---------- troubleshooting ---------- */
+details.ts{
+  background:var(--surface);border:1px solid var(--rule);border-radius:7px;
+  margin:0 0 8px;overflow:hidden;
+}
+details.ts summary{
+  cursor:pointer;padding:11px 16px;font-weight:600;font-size:15px;
+  list-style:none;display:flex;align-items:center;gap:10px;
+}
+details.ts summary::-webkit-details-marker{display:none}
+details.ts summary::before{
+  content:"";width:7px;height:7px;flex:none;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(-45deg);transition:transform .15s ease;margin-left:2px;
+}
+details.ts[open] summary::before{transform:rotate(45deg)}
+details.ts .body{padding:0 16px 14px 35px;font-size:15px;color:var(--ink-2)}
+details.ts .body p:last-child{margin-bottom:0}
+
+/* ---------- register legend ---------- */
+.legend{display:grid;gap:8px;margin:0 0 16px}
+.legend div{
+  display:flex;align-items:flex-start;gap:12px;font-size:15px;
+  background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:10px 14px;
+}
+.legend .bar-sw{width:5px;align-self:stretch;border-radius:3px;flex:none}
+.legend .yl{background:var(--cross)}
+.legend .tl{background:var(--internal)}
+.legend .nn{background:var(--rule)}
+
+/* ---------- final checklist ---------- */
+ol.checklist{list-style:none;padding:0;counter-reset:ck;max-width:none}
+ol.checklist li{
+  counter-increment:ck;display:flex;gap:13px;align-items:flex-start;
+  background:var(--surface);border:1px solid var(--rule);border-radius:7px;
+  padding:11px 15px;margin:0 0 7px;font-size:15px;
+}
+ol.checklist li::before{
+  content:counter(ck);flex:none;width:22px;text-align:right;
+  color:var(--muted);font-variant-numeric:tabular-nums;font-weight:650;font-size:13.5px;line-height:1.7;
+}
+ol.checklist input{width:17px;height:17px;margin:5px 0 0;accent-color:var(--internal);cursor:pointer;flex:none}
+ol.checklist label{cursor:pointer;flex:1}
+ol.checklist li.on{border-color:var(--internal)}
+ol.checklist li.on label{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--rule)}
+
+mark{background:var(--cross-bg);color:var(--ink);box-shadow:0 0 0 1px var(--cross) inset;border-radius:2px;padding:0 1px}
+.hide{display:none!important}
+.empty{color:var(--muted);font-size:15px;padding:20px 0}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  nav.rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--rule);padding:16px 20px}
+  main{padding:26px 20px 80px}
+  .bar h1 span{display:none}
+}
+@media print{
+  .bar,nav.rail,.step-foot,.next,.copy,.cmd-bar .copy{display:none!important}
+  .hide{display:revert!important}
+  .wrap{display:block;max-width:none}
+  main{padding:0;max-width:none}
+  body{background:#fff;color:#000;font-size:11pt}
+  .step,.tw,details.ts,ol.checklist li,.legend div{break-inside:avoid;border-color:#999}
+  .cmd pre{background:#f2f2f2;color:#000;border-top:1px solid #999}
+  details.ts .body{display:block!important}
+  h2.sec,h3{break-after:avoid}
+  a{text-decoration:none}
+}
+
+    ol.tight,ul.tight{margin:10px 0 14px;padding-left:22px}
+    ol.tight li,ul.tight li{margin:5px 0;line-height:1.6}
+  </style>
+</head>
+<body>
+
+<header class="bar">
+  <h1>PPSM Builder <span>· Standard Operating Procedure</span></h1>
+  <div class="spacer"></div>
+  <div class="search" id="searchWrap">
+    <input id="q" type="search" placeholder="Search the procedure" aria-label="Search the procedure" autocomplete="off">
+    <button id="clearQ" type="button" aria-label="Clear search">×</button>
+  </div>
+  <span class="hits" id="hits"></span>
+  <button class="btn" id="themeBtn" type="button">Dark</button>
+  <button class="btn" id="printBtn" type="button">Print</button>
+</header>
+
+<div class="wrap">
+
+<nav class="rail" aria-label="Procedure contents">
+  <div class="progress">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <p id="progressText">0 of 7 steps marked complete</p>
+    <p id="railRuns" style="margin:2px 0 0;font-size:12px;color:var(--muted)"></p>
+  </div>
+
+  <h2>Start here</h2>
+  <ul>
+    <li><a href="#runlist-sec"><strong>The whole job</strong></a></li>
+    <li><a href="#whichip-sec">Which address ends up where</a></li>
+    <li><a href="#files-sec">Every file the builder reads</a></li>
+    <li><a href="#emass-sec">What the eMASS template needs from you</a></li>
+  </ul>
+
+  <h2>Reference</h2>
+  <ul>
+    <li><a href="#what">What this tool does</a></li>
+    <li><a href="#before">Before you start</a></li>
+  </ul>
+
+  <h2>Procedures</h2>
+  <ul id="stepNav">
+    <li data-navstep="1"><a href="#step1"><span class="num">1</span>Identify the system</a></li>
+    <li data-navstep="2"><a href="#step2"><span class="num">2</span>Gather the data</a></li>
+    <li data-navstep="3"><a href="#step3"><span class="num">3</span>Import</a></li>
+    <li data-navstep="4"><a href="#step4"><span class="num">4</span>Work the register</a></li>
+    <li data-navstep="5"><a href="#step5"><span class="num">5</span>Identify the endpoints</a></li>
+    <li data-navstep="6"><a href="#step6"><span class="num">6</span>Boundary diagram</a></li>
+    <li data-navstep="7"><a href="#step7"><span class="num">7</span>Export</a></li>
+  </ul>
+
+  <h2>Support</h2>
+  <ul>
+    <li><a href="#settings">Settings and customization</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+  <div class="hero">
+    <h1>Building a PPSM register, start to finish</h1>
+    <p class="lede">How to gather network data and turn it into a Ports, Protocols and Services Management register and boundary diagram.</p>
+    <div class="facts">
+      <span class="fact"><b>7</b> procedure steps</span>
+      <span class="fact">Runs offline in a browser</span>
+      <span class="fact">Safe on standalone and air-gapped systems</span>
+    </div>
+  </div>
+
+  <!-- ============ 1 ============ -->
+  <section id="what">
+    <h2 class="sec">What this tool does</h2>
+    <p><strong>PPSM Builder</strong> is a single HTML file that turns raw network data — packet captures, firewall connection tables, NetFlow, scan output — into a Ports, Protocols and Services Management register. It identifies the systems behind the addresses, and generates a boundary diagram from the finished register.</p>
+    <p>The register answers two questions at once:</p>
+    <ul>
+      <li><strong>What</strong> ports and protocols are in use</li>
+      <li><strong>Which</strong> systems are using them</li>
+    </ul>
+    <p>An IP address on its own is not an answer to the second question. Reviewers approve traffic between named systems, and an address does not say what the system is or who owns it. Every internal endpoint needs a hostname before the register goes forward, and the tool tracks how far along you are.</p>
+    <div class="note">
+      <p><strong>On static addressing.</strong> In MOPS, MPE and CSS environments IP addresses are statically assigned, so an address does stay with a host. That makes hostname resolution easier, not optional: the register still has to name the system, because a reviewer reading <code>10.20.30.15</code> cannot tell whether it is a domain controller or a printer, and the static assignment lives in a document they do not have. Where addressing is static you also have a reliable naming source to work from, which is usually the assignment spreadsheet or the AD/CMDB export.</p>
+    </div>
+
+    <h3>Runs entirely offline</h3>
+    <p>Everything runs inside the browser on the machine you open it on. Nothing is uploaded, nothing is installed, and no network connection is needed. Packet captures are decoded locally. That makes it safe to carry onto a standalone or air-gapped system — copy the file over, double-click it, and work.</p>
+
+    <div class="note warn">
+      <p><span class="lbl">Scope note.</span> The tool assembles a register and draws a picture of it. It <strong>does not</strong> certify compliance, and it <strong>does not</strong> replace your approved network architecture drawing. The accuracy of the inputs, and the boundary and classification analysis, stay with you.</p>
+    </div>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section id="before">
+    <h2 class="sec">Before you start</h2>
+    <ol>
+      <li><strong>Copy the <code>.html</code> file to a local folder you own</strong> — your Desktop is fine. Running it from a network share, a SharePoint viewer, or an email preview pane will break file reading.</li>
+      <li><strong>Open it in Edge, Chrome, or Firefox.</strong> Confirm the address bar shows a <code>file://</code> path. If it opens in a document viewer instead, right-click → <strong>Open with</strong> → your browser.</li>
+      <li><strong>Click Self-Test at the top.</strong> It runs about three dozen checks against the parsers, exports, and diagram code. A green summary means the tool works on that machine. Do this once on any new or standalone system before you rely on the output.</li>
+    </ol>
+    <div class="note ok">
+      <p>The Self-Test runs in isolation and does not touch data you have already loaded, so it is safe to run at any point.</p>
+    </div>
+  </section>
+
+  <!-- ============ RUN LIST ============ -->
+  <section id="runlist-sec">
+    <h2 class="sec">The whole job, start to finish</h2>
+    <p>Pick how you want to collect, then work down the cards. Each one says exactly where it is executed. Tick <strong>Done</strong> as you go, or <strong>N/A</strong> if that step does not apply to this system &mdash; a marked-out step still counts as handled, so the count completes either way.</p>
+
+    <div class="pathpick" role="tablist" aria-label="Collection method">
+      <button type="button" class="pathbtn on" id="pathScript" role="tab" aria-selected="true">
+        <b>Scripted</b><span>10 steps &middot; run the collectors</span></button>
+      <button type="button" class="pathbtn" id="pathManual" role="tab" aria-selected="false">
+        <b>Manual</b><span>14 steps &middot; type every command</span></button>
+    </div>
+    <p class="hint" id="pathNote">Both paths collect the same things and produce the same
+      folder. Use <strong>Scripted</strong> unless scripts are not permitted on the system,
+      in which case <strong>Manual</strong> gives you every command to run by hand. Each
+      path keeps its own ticks.</p>
+
+    <div class="tw"><table class="kv">
+      <thead><tr><th>Where you will be</th><th>How you get a prompt there</th></tr></thead>
+      <tbody>
+        <tr><td><span class="dev dev-host-win">Windows host</span></td>
+            <td>Sat at the machine, or connected to it. <strong>PowerShell, Run as Administrator</strong>. Without elevation the process behind each port comes back empty.</td></tr>
+        <tr><td><span class="dev dev-host-nix">Linux host</span></td>
+            <td>An SSH session or a console on the machine. Run with <code>sudo</code>, for the same reason.</td></tr>
+        <tr><td><span class="dev dev-dc">Domain controller</span></td>
+            <td>Any machine with the RSAT ActiveDirectory module. Run once for the domain, not once per host.</td></tr>
+        <tr><td><span class="dev dev-fw">Firewall</span></td>
+            <td>Either <strong>FMC &rarr; Devices &rarr; Device Management &rarr; Threat Defense CLI</strong>, which needs no SSH access to the device, or SSH straight to the management address. Both are written up in section 2.</td></tr>
+        <tr><td><span class="dev dev-sw">Switch</span></td>
+            <td>SSH to the switch management address. Repeat per switch; only the ones with NetFlow configured will return anything.</td></tr>
+        <tr><td><span class="dev dev-ctrl">Ansible node</span></td>
+            <td>Wherever <code>ansible-playbook</code> runs and your inventory lives.</td></tr>
+        <tr><td><span class="dev dev-wks">Your workstation</span></td>
+            <td>Your own desktop, in a browser. Nothing is uploaded from it.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="runbar">
+      <span class="runcount" id="runCount">0 of 6 handled</span>
+      <span id="runHint">Nothing needs configuring in the tool before you start.</span>
+      <button type="button" id="runReset">Clear all</button>
+    </div>
+
+    <ol class="runlist" id="runlist-s">
+        <li class="run-group"><span>A &middot; Windows hosts</span><em>skip the group if the enclave has none</em></li>
+        <li class="run" id="run-s-1">
+          <div class="run-h">
+            <div class="run-n">1</div>
+            <div class="run-t">
+              <span class="dev dev-host-win">Windows host</span><b>Run the Windows collector</b>
+              <div class="run-where"><span class="pin">Run it here:</span> One domain-joined Windows machine &mdash; PowerShell, Run as Administrator</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="1" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="1" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">WINDOWS HOST</span> PowerShell, Run as Administrator</span></div><pre>cd C:\ppsm
+.\ppsm-collect.ps1</pre></div><p>To reach the other Windows hosts in the same run, list them in a text file first, one name per line:</p><div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">WINDOWS HOST</span> PowerShell, Run as Administrator</span></div><pre>.\ppsm-collect.ps1 -ComputerListFile hosts.txt</pre></div>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>The collector works this out for you. If you read the output yourself: on a <b>LISTEN</b> line the <b>Local Address</b> is the service and becomes the <b>Destination IP</b>; on an <b>ESTAB</b> line the far end is whichever side holds the better-known port. A listener on <code>0.0.0.0</code> means <i>every interface on this host</i>, so it is attributed to the machine the file came from, not to a literal address.</p></div>
+            <div class="run-gives"><b>Gives you:</b> Listening ports, active connections and the process behind each one, for every host it reached. Writes <code>.\ppsm-results\</code>.</div>
+            
+          </div>
+        </li>
+        <li class="run" id="run-s-2">
+          <div class="run-h">
+            <div class="run-n">2</div>
+            <div class="run-t">
+              <span class="dev dev-dc">Domain controller</span><b>Get the AD and DNS exports</b>
+              <div class="run-where"><span class="pin">Run it here:</span> A domain controller &mdash; PowerShell, Run as Administrator</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="2" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="2" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>Run the collector once on a domain controller. A DC normally has both the ActiveDirectory and DnsServer modules, so this one run exports every computer account <em>and</em> every DNS zone, forward and reverse:</p><div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">DOMAIN CONTROLLER</span> PowerShell, Run as Administrator</span></div><pre>cd C:\ppsm
+.\ppsm-collect.ps1</pre></div><p>Then check that both <code>inventory\ad-computers.csv</code> and <code>inventory\dns-records.csv</code> exist. The collector says on screen if either module was missing.</p>
+            <div class="run-gives"><b>Gives you:</b> A name for nearly every address in the enclave. The reverse zones are the authoritative answer to "what is this address called", and the builder uses them to fill hostnames into every row from every other file, in both directions.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if there is no domain. Any other name source works instead &mdash; a CMDB export, a DNS zone file, or a hosts file.</div>
+          </div>
+        </li>
+        <li class="run-group"><span>B &middot; Linux hosts</span><em>skip the group if the enclave has none</em></li>
+        <li class="run" id="run-s-3">
+          <div class="run-h">
+            <div class="run-n">3</div>
+            <div class="run-t">
+              <span class="dev dev-host-nix">Linux host</span><b>Run the Linux collector</b>
+              <div class="run-where"><span class="pin">Run it here:</span> One Linux host &mdash; a shell, with sudo</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="3" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="3" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">LINUX HOST</span> shell, with sudo</span></div><pre>cd /opt/ppsm
+sudo ./ppsm-collect.sh</pre></div><p>To reach the other Linux hosts over SSH in the same run:</p><div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">LINUX HOST</span> shell, with sudo</span></div><pre>sudo ./ppsm-collect.sh -H hosts.txt -u svc-ppsm</pre></div>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>Same rule as the Windows card: <b>Local Address</b> on a LISTEN line is the service. Anything bound to <code>127.0.0.1</code> is skipped &mdash; it cannot leave the host, so it crosses no boundary and is not registrable.</p></div>
+            <div class="run-gives"><b>Gives you:</b> The same for Linux: ports, connections and the process behind each socket, plus <code>/etc/hosts</code> and the ARP table as extra name sources.</div>
+            
+          </div>
+        </li>
+        <li class="run" id="run-s-4">
+          <div class="run-h">
+            <div class="run-n">4</div>
+            <div class="run-t">
+              <span class="dev dev-ctrl">Ansible node</span><b>Or do the whole fleet at once</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The Ansible control node &mdash; a shell</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="4" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="4" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">ANSIBLE CONTROL NODE</span> a shell</span></div><pre>ansible-playbook -i inventory.ini ppsm-collect.yml</pre></div>
+            <div class="run-gives"><b>Gives you:</b> Windows and Linux hosts, the firewall and the switches in one run. Replaces cards 1, 3, 5 and 6 if your inventory covers everything.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if you are not using Ansible.</div>
+          </div>
+        </li>
+        <li class="run-group"><span>C &middot; Network devices</span><em>the boundary evidence</em></li>
+        <li class="run" id="run-s-5">
+          <div class="run-h">
+            <div class="run-n">5</div>
+            <div class="run-t">
+              <span class="dev dev-fw">Firewall</span><b>Take the firewall connection table</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The enclave firewall &mdash; FMC &rarr; Threat Defense CLI, or SSH</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="5" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="5" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">FIREWALL</span> FMC Threat Defense CLI, or SSH</span></div><pre>terminal pager 0
+show conn all</pre></div><p>Save the output as <code>ppsm-results\network\firewall-showconn.txt</code>.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>Each line names two interfaces and two addresses, for example <code>TCP outside 140.82.121.4:443 inside 172.22.14.61:51002</code>. The <b>service is the end with the well-known port</b> (443 here), which becomes the Destination; the other end is the Source. The interface names (<code>inside</code>, <code>outside</code>, <code>dmz</code>) are what set the zone columns, so keep them.</p></div>
+            <div class="run-gives"><b>Gives you:</b> What actually crosses the boundary. The interface name on each line is what sets the Boundary column, so this is the file that turns a list of ports into a PPSM register.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A only if the system genuinely has no firewall in front of it.</div>
+          </div>
+        </li>
+        <li class="run" id="run-s-5b">
+          <div class="run-h">
+            <div class="run-n">5b</div>
+            <div class="run-t">
+              <span class="dev dev-fw">Firewall</span><b>Take the ruleset while you are there</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The enclave firewall &mdash; same session as the connection table</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="5b" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="5b" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">FIREWALL</span> FMC Threat Defense CLI, or SSH</span></div><pre>show running-config access-list
+show running-config object-group</pre></div><p>Save both as <code>ppsm-results\network\firewall-acl.txt</code>. On FMC you can instead export the access control policy to CSV and drop that in; both are read.</p><p class="hint">Take the object-groups as well as the access-lists. Without them a rule written against a group cannot be expanded into the hosts and ports it actually covers.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>In an access-list the <b>destination network</b> is the service being permitted; the source network is who may reach it. A rule written against an <code>object-group</code> is expanded into one row per host, so the group members are the addresses that matter.</p></div>
+            <div class="run-gives"><b>Gives you:</b> What the firewall <em>permits</em>, as opposed to what it happened to be carrying. The tool then reports rules nobody uses and traffic no rule authorises &mdash; both of which are findings in their own right.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if you cannot get the running config.</div>
+          </div>
+        </li>
+<li class="run" id="run-s-5c">
+          <div class="run-h">
+            <div class="run-n">5c</div>
+            <div class="run-t">
+              <span class="dev dev-fmc">FMC console</span><b>Export the FMC reports</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The FMC web console &mdash; in a browser</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="5c" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="5c" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>In the FMC web console, export each of these to <strong>CSV</strong> for the same window you used for the rest of the collection &mdash; thirty days if you can. Menu names shift a little between FMC versions; the reports themselves do not.</p><div class="tw"><table class="kv"><thead><tr><th>Report</th><th>Where to find it</th></tr></thead><tbody><tr><td>Connection Events</td><td>Analysis &rarr; Connections &rarr; Events, table view</td></tr><tr><td>Servers</td><td>Analysis &rarr; Hosts &rarr; Servers</td></tr><tr><td>Hosts</td><td>Analysis &rarr; Hosts &rarr; Network Map, or the Hosts table</td></tr><tr><td>Access control policy</td><td>Policies &rarr; Access Control &rarr; the report icon beside the policy (PDF), or a CSV export</td></tr><tr><td>Site-to-site VPN</td><td>Devices &rarr; VPN &rarr; Site To Site</td></tr></tbody></table></div><p>Save everything into <code>ppsm-results\network\</code>. You do not need to say which report is which; the builder works it out from the columns and shows what it decided on the import line.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>In connection events the columns are <b>Initiator IP</b> and <b>Responder IP</b>: the <b>responder is the service</b>, so it becomes the Destination. That is why these reports need no guessing. In the Servers report the <b>IP Address</b> column is the host offering the service.</p></div>
+            <div class="run-gives"><b>Gives you:</b> Direction settled by initiator and responder rather than guessed, the rule behind every flow, listening services with versions, hostnames nothing else knows, and the tunnels that need a B15 or B16 decision.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if the firewall is not managed by FMC.</div>
+          </div>
+        </li>
+        <li class="run" id="run-s-6">
+          <div class="run-h">
+            <div class="run-n">6</div>
+            <div class="run-t">
+              <span class="dev dev-sw">Switch</span><b>Take the NetFlow cache</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Each switch with NetFlow configured &mdash; switch CLI over SSH</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="6" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="6" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">SWITCH</span> CLI over SSH</span></div><pre>show flow monitor ?
+show flow monitor FLOW-IN-IQCORE cache format csv</pre></div><p>The first command lists the monitors that exist. Nothing listed means NetFlow is not configured on that switch. Save as <code>ppsm-results\network\&lt;switch&gt;-netflow.csv</code>.</p>
+            <p class="hint"><strong>Or, if you run a NetFlow analyser</strong> (SolarWinds NTA, ManageEngine, Plixer, Stealthwatch): export its <em>Top Conversations</em> report for the last 30 days as <strong>.xlsx</strong> or CSV instead. It covers every switch at once, and a longer window than the switch cache holds.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>NetFlow records a direction already: <b>IPV4 DST ADDR</b> with the well-known port is the service. The <b>ingress interface</b> column is what tells the builder which way the flow crossed, so include it if your export lets you choose columns.</p></div>
+            <div class="run-gives"><b>Gives you:</b> East-west flows between hosts on the same segment, which the firewall never sees because that traffic never reaches it.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if NetFlow is not configured anywhere.</div>
+          </div>
+        </li>
+        <li class="run-group"><span>D &middot; Finish in the tool</span><em>nothing to configure first</em></li>
+        <li class="run" id="run-s-7">
+          <div class="run-h">
+            <div class="run-n">7</div>
+            <div class="run-t">
+              <span class="dev dev-wks">Your workstation</span><b>Add the ACAS scan, then import</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Your workstation &mdash; Tenable.sc, then the tool</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="7" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="7" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>If ACAS scans this enclave, export the scan as <strong>Nessus (.nessus)</strong> and drop it into <code>ppsm-results\</code> alongside everything else.</p><p>Then open <code>ppsm-builder.html</code> and drag the whole <code>ppsm-results</code> folder onto the ingest box.</p>
+            <div class="run-gives"><b>Gives you:</b> Names resolved, boundary, enclave, data service, description, eMASS type and connection points derived, repeat sightings merged into one row, review checks run. All of it without touching a setting.</div>
+            
+          </div>
+        </li>
+        <li class="run" id="run-s-8">
+          <div class="run-h">
+            <div class="run-n">8</div>
+            <div class="run-t">
+              <span class="dev dev-wks">Your workstation</span><b>Export the submission</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Same browser tab &mdash; Export section</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="s" data-run="8" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="s" data-run="8" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>Press <strong>Export &rarr; eMASS PPSM Template (.xlsx)</strong>, then <strong>Save Session</strong> before you close the tab.</p>
+            <div class="run-gives"><b>Gives you:</b> The submission workbook, and a file you can reopen and carry on from.</div>
+            
+          </div>
+        </li>
+    </ol>
+
+    <ol class="runlist" id="runlist-m" hidden>
+        <li class="run-group"><span>Setup</span><em>do this once</em></li>
+        <li class="run" id="run-m-1">
+          <div class="run-h">
+            <div class="run-n">1</div>
+            <div class="run-t">
+              <span class="dev dev-wks">Your workstation</span><b>Create the folder structure</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Your workstation &mdash; anywhere you can write</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="1" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="1" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>Everything you collect goes into one of these three. The tool reads all three in a single drag.</p><div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">YOUR WORKSTATION</span> any shell</span></div><pre>ppsm-results\
+  hosts\
+  inventory\
+  network\</pre></div>
+            <div class="run-gives"><b>Gives you:</b> One place for every file, so nothing is lost track of.</div>
+            
+          </div>
+        </li>
+        <li class="run-group"><span>A &middot; Windows hosts</span><em>repeat per host; skip the group if the enclave has none</em></li>
+        <li class="run" id="run-m-2">
+          <div class="run-h">
+            <div class="run-n">2</div>
+            <div class="run-t">
+              <span class="dev dev-host-win">Windows host</span><b>List ports and connections</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Each Windows host &mdash; PowerShell, Run as Administrator</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="2" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="2" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">WINDOWS HOST</span> PowerShell, Run as Administrator</span></div><pre>Get-NetTCPConnection |
+  Select-Object *,@{n='Process';e={(Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).ProcessName}} |
+  Export-Csv -NoTypeInformation "$env:COMPUTERNAME-tcp.csv"
+
+Get-NetUDPEndpoint |
+  Select-Object *,@{n='Process';e={(Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).ProcessName}} |
+  Export-Csv -NoTypeInformation "$env:COMPUTERNAME-udp.csv"</pre></div><p class="hint">Name the files after the host. That name is how a service listening on <code>0.0.0.0</code> is attributed to the right machine. Works the same on Windows 10 and 11.</p><p>Copy both into <code>ppsm-results\hosts\</code>.</p><p class="hint">Simpler still, if process names are not needed: <code>netstat -ano &gt; %COMPUTERNAME%-netstat.txt</code> covers TCP and UDP in one command and is read just as well. Elevated, <code>netstat -anob</code> adds the executable.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>In the exported CSV, <b>LocalAddress / LocalPort</b> is this host and <b>RemoteAddress / RemotePort</b> is the far end. The <b>State</b> column decides which is the service: <code>Listen</code> means the local port is the service; <code>Established</code> means whichever end holds the better-known port is. <code>0.0.0.0</code> means all interfaces &mdash; name the file after the host so those rows can be attributed.</p></div>
+            <div class="run-gives"><b>Gives you:</b> The services this host offers and who it talks to. The process column is what proves a port is a real listening service rather than a passing connection.</div>
+            
+          </div>
+        </li>
+        <li class="run" id="run-m-3">
+          <div class="run-h">
+            <div class="run-n">3</div>
+            <div class="run-t">
+              <span class="dev dev-dc">Domain controller</span><b>Export the computer names</b>
+              <div class="run-where"><span class="pin">Run it here:</span> A domain controller, or any machine with RSAT &mdash; PowerShell</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="3" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="3" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">DOMAIN CONTROLLER</span> PowerShell</span></div><pre>Get-ADComputer -Filter * -Properties DNSHostName,IPv4Address,OperatingSystem |
+  Where-Object IPv4Address |
+  Select-Object Name,DNSHostName,IPv4Address,OperatingSystem |
+  Export-Csv -NoTypeInformation ad-computers.csv</pre></div><p>Put it in <code>ppsm-results\inventory\</code>. Run this once, not per host.</p>
+            <div class="run-gives"><b>Gives you:</b> A name and an owner for nearly every address in the enclave, from one command.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if there is no domain; use a CMDB export or a DNS zone file instead.</div>
+          </div>
+        </li>
+        <li class="run" id="run-m-3b">
+          <div class="run-h">
+            <div class="run-n">3b</div>
+            <div class="run-t">
+              <span class="dev dev-dc">DNS server</span><b>Export the DNS zones</b>
+              <div class="run-where"><span class="pin">Run it here:</span> A DNS server, usually a domain controller &mdash; PowerShell, Run as Administrator</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="3b" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="3b" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>Every zone, forward <em>and</em> reverse, with the record data expanded &mdash; a plain <code>Export-Csv</code> writes "DnsServerResourceRecordA" in place of the address, which is no use:</p><div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">DNS SERVER</span> PowerShell, Run as Administrator</span></div><pre>Get-DnsServerZone | Where-Object { -not $_.IsAutoCreated } | ForEach-Object {
+  $z = $_.ZoneName
+  Get-DnsServerResourceRecord -ZoneName $z |
+    Where-Object RecordType -in 'A','PTR','CNAME' |
+    Select-Object HostName, RecordType, @{n='ZoneName';e={$z}},
+      @{n='IPv4Address';e={$_.RecordData.IPv4Address.IPAddressToString}},
+      @{n='PtrDomainName';e={$_.RecordData.PtrDomainName}},
+      @{n='HostNameAlias';e={$_.RecordData.HostNameAlias}}
+} | Export-Csv -NoTypeInformation dns-records.csv</pre></div><p>Put it in <code>ppsm-results\inventory\</code>. Where PowerShell is not available, <code>dnscmd /zoneprint &lt;zone&gt; &gt; zone.txt</code> for each zone is read just as well.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>A forward zone maps <b>name &rarr; address</b> (an <code>A</code> record). A reverse zone maps <b>address &rarr; name</b>: the owner <code>11.40.22.172.in-addr.arpa</code> is the address <code>172.22.40.11</code> read backwards. Take both &mdash; the reverse zone is the authoritative answer to "what is this address called".</p></div>
+            <div class="run-gives"><b>Gives you:</b> The authoritative name for every address. Reverse zones answer "what is this address called" directly, and CNAME aliases let a row that only has an alias still find its address.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if the enclave has no DNS of its own.</div>
+          </div>
+        </li>
+        <li class="run" id="run-m-4">
+          <div class="run-h">
+            <div class="run-n">4</div>
+            <div class="run-t">
+              <span class="dev dev-host-win">Windows host</span><b>Copy the local name sources</b>
+              <div class="run-where"><span class="pin">Run it here:</span> One Windows host &mdash; Command Prompt</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="4" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="4" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">WINDOWS HOST</span> Command Prompt</span></div><pre>copy %SystemRoot%\System32\drivers\etc\hosts hosts-file.txt</pre></div><p>Put it in <code>ppsm-results\inventory\</code>.</p>
+            <div class="run-gives"><b>Gives you:</b> Names for anything statically assigned that AD does not hold.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if the hosts file is empty apart from the default comments.</div>
+          </div>
+        </li>
+        <li class="run-group"><span>B &middot; Linux hosts</span><em>repeat per host; skip the group if the enclave has none</em></li>
+        <li class="run" id="run-m-5">
+          <div class="run-h">
+            <div class="run-n">5</div>
+            <div class="run-t">
+              <span class="dev dev-host-nix">Linux host</span><b>List ports and connections</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Each Linux host &mdash; a shell, with sudo</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="5" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="5" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">LINUX HOST</span> shell, with sudo</span></div><pre>H=$(hostname -s)
+{ echo "# ppsm-host: $H"; sudo ss -tuanp; } > $H-sockets.txt</pre></div><p>Copy it into <code>ppsm-results/hosts/</code>.</p><p class="hint">The <code>ppsm-host</code> line is not optional. A service listening on <code>0.0.0.0</code> does not say which machine it is on, and that line is how the tool attributes it. Without it those rows arrive unattributed and you have to fix them by hand.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p><b>Local Address:Port</b> is this host; <b>Peer Address:Port</b> is the far end. On a LISTEN line the local port is the service. Bindings to <code>127.0.0.1</code> or <code>127.0.0.53</code> are skipped automatically &mdash; they never leave the host.</p></div>
+            <div class="run-gives"><b>Gives you:</b> Listening ports, active connections and the process behind each socket. Run it with <code>sudo</code>, or the process column comes back empty.</div>
+            
+          </div>
+        </li>
+        <li class="run" id="run-m-6">
+          <div class="run-h">
+            <div class="run-n">6</div>
+            <div class="run-t">
+              <span class="dev dev-host-nix">Linux host</span><b>Copy the local name sources</b>
+              <div class="run-where"><span class="pin">Run it here:</span> One Linux host &mdash; a shell</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="6" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="6" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">LINUX HOST</span> shell</span></div><pre>cp /etc/hosts hosts-file.txt
+ip neigh > arp-table.txt</pre></div><p>Put both in <code>ppsm-results/inventory/</code>.</p>
+            <div class="run-gives"><b>Gives you:</b> Names for appliances, printers and anything else with a static address.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if neither file has anything useful in it.</div>
+          </div>
+        </li>
+        <li class="run-group"><span>C &middot; Network devices</span><em>the boundary evidence</em></li>
+        <li class="run" id="run-m-6b">
+          <div class="run-h">
+            <div class="run-n">6b</div>
+            <div class="run-t">
+              <span class="dev dev-host-nix">Linux host</span><b>Copy the DNS zone files</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The BIND DNS server, if there is one &mdash; a shell, with sudo</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="6b" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="6b" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">LINUX HOST</span> shell, with sudo</span></div><pre>sudo cp /var/named/*.zone /var/named/*.rev ppsm-results/inventory/ 2>/dev/null
+sudo cp /etc/bind/db.* ppsm-results/inventory/ 2>/dev/null</pre></div><p>Take the reverse zones (<code>*.in-addr.arpa</code>, <code>*.rev</code>) as well as the forward ones. Leave out the stock files &mdash; <code>db.local</code>, <code>db.127</code>, <code>db.root</code> &mdash; they name nothing in your enclave.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>As above: <code>*.in-addr.arpa</code> and <code>*.rev</code> files are the reverse zones, and those are the ones that name an address you already have.</p></div>
+            <div class="run-gives"><b>Gives you:</b> The same as card 3b, for an enclave whose DNS runs on BIND.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if DNS is served from Windows, or if there is no DNS server of your own.</div>
+          </div>
+        </li>
+        <li class="run" id="run-m-7">
+          <div class="run-h">
+            <div class="run-n">7</div>
+            <div class="run-t">
+              <span class="dev dev-fw">Firewall</span><b>Take the firewall connection table</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The enclave firewall &mdash; FMC &rarr; Threat Defense CLI, or SSH</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="7" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="7" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">FIREWALL</span> FMC Threat Defense CLI, or SSH</span></div><pre>terminal pager 0
+show conn all</pre></div><p>Save the output as <code>ppsm-results\network\firewall-showconn.txt</code>. Section 2 below has the full detail on reaching the CLI both ways.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p>Same as the scripted card: the end holding the well-known port is the service, and the interface names on each line set the zone columns.</p></div>
+            <div class="run-gives"><b>Gives you:</b> What actually crosses the boundary, with the interface names that set the Boundary column.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A only if the system genuinely has no firewall in front of it.</div>
+          </div>
+        </li>
+        <li class="run" id="run-m-7b">
+          <div class="run-h">
+            <div class="run-n">7b</div>
+            <div class="run-t">
+              <span class="dev dev-fw">Firewall</span><b>Take the ruleset while you are there</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The enclave firewall &mdash; same session as the connection table</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="7b" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="7b" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">FIREWALL</span> FMC Threat Defense CLI, or SSH</span></div><pre>show running-config access-list
+show running-config object-group</pre></div><p>Save both as <code>ppsm-results\network\firewall-acl.txt</code>. On FMC you can instead export the access control policy to CSV and drop that in; both are read.</p><p class="hint">Take the object-groups as well as the access-lists. Without them a rule written against a group cannot be expanded into the hosts and ports it actually covers.</p>
+            <div class="run-gives"><b>Gives you:</b> What the firewall <em>permits</em>, as opposed to what it happened to be carrying. The tool then reports rules nobody uses and traffic no rule authorises &mdash; both of which are findings in their own right.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if you cannot get the running config.</div>
+          </div>
+        </li>
+<li class="run" id="run-m-7c">
+          <div class="run-h">
+            <div class="run-n">7c</div>
+            <div class="run-t">
+              <span class="dev dev-fmc">FMC console</span><b>Export the FMC reports</b>
+              <div class="run-where"><span class="pin">Run it here:</span> The FMC web console &mdash; in a browser</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="7c" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="7c" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>In the FMC web console, export each of these to <strong>CSV</strong> for the same window you used for the rest of the collection &mdash; thirty days if you can. Menu names shift a little between FMC versions; the reports themselves do not.</p><div class="tw"><table class="kv"><thead><tr><th>Report</th><th>Where to find it</th></tr></thead><tbody><tr><td>Connection Events</td><td>Analysis &rarr; Connections &rarr; Events, table view</td></tr><tr><td>Servers</td><td>Analysis &rarr; Hosts &rarr; Servers</td></tr><tr><td>Hosts</td><td>Analysis &rarr; Hosts &rarr; Network Map, or the Hosts table</td></tr><tr><td>Access control policy</td><td>Policies &rarr; Access Control &rarr; the report icon beside the policy (PDF), or a CSV export</td></tr><tr><td>Site-to-site VPN</td><td>Devices &rarr; VPN &rarr; Site To Site</td></tr></tbody></table></div><p>Save everything into <code>ppsm-results\network\</code>. You do not need to say which report is which; the builder works it out from the columns and shows what it decided on the import line.</p>
+            <div class="run-gives"><b>Gives you:</b> Direction settled by initiator and responder rather than guessed, the rule behind every flow, listening services with versions, hostnames nothing else knows, and the tunnels that need a B15 or B16 decision.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if the firewall is not managed by FMC.</div>
+          </div>
+        </li>
+        <li class="run" id="run-m-8">
+          <div class="run-h">
+            <div class="run-n">8</div>
+            <div class="run-t">
+              <span class="dev dev-sw">Switch</span><b>Take the NetFlow cache</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Each switch with NetFlow configured &mdash; switch CLI over SSH</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="8" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="8" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">SWITCH</span> CLI over SSH</span></div><pre>show flow monitor ?
+show flow monitor FLOW-IN-IQCORE cache format csv</pre></div><p>Nothing listed after the <code>?</code> means NetFlow is not configured there. Save as <code>ppsm-results\network\&lt;switch&gt;-netflow.csv</code>.</p>
+            <p class="hint"><strong>Or, if you run a NetFlow analyser</strong> (SolarWinds NTA, ManageEngine, Plixer, Stealthwatch): export its <em>Top Conversations</em> report for the last 30 days as <strong>.xlsx</strong> or CSV instead. It covers every switch at once, and a longer window than the switch cache holds.</p>
+            <div class="ipnote"><span class="ipnote-h">Which address matters</span><p><b>IPV4 DST ADDR</b> plus the well-known port is the service; keep the ingress interface column if the export lets you choose.</p></div>
+            <div class="run-gives"><b>Gives you:</b> East-west flows the firewall never sees.</div>
+            <div class="run-where" style="margin-top:6px">Mark N/A if NetFlow is not configured anywhere.</div>
+          </div>
+        </li>
+        <li class="run-group"><span>D &middot; Finish in the tool</span><em>nothing to configure first</em></li>
+        <li class="run" id="run-m-9">
+          <div class="run-h">
+            <div class="run-n">9</div>
+            <div class="run-t">
+              <span class="dev dev-wks">Your workstation</span><b>Add the ACAS scan, then import</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Your workstation &mdash; Tenable.sc, then the tool</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="9" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="9" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>If ACAS scans this enclave, export it as <strong>Nessus (.nessus)</strong> into <code>ppsm-results\</code>.</p><p>Then open <code>ppsm-builder.html</code> and drag the whole <code>ppsm-results</code> folder onto the ingest box.</p>
+            <div class="run-gives"><b>Gives you:</b> Names resolved, boundary and enclave derived, repeat sightings merged, review checks run.</div>
+            <div class="run-where" style="margin-top:6px">The ACAS part is N/A if the enclave is not scanned; the import is not.</div>
+          </div>
+        </li>
+        <li class="run" id="run-m-10">
+          <div class="run-h">
+            <div class="run-n">10</div>
+            <div class="run-t">
+              <span class="dev dev-wks">Your workstation</span><b>Export the submission</b>
+              <div class="run-where"><span class="pin">Run it here:</span> Same browser tab &mdash; Export section</div>
+            </div>
+            <div class="run-marks">
+              <label class="m-done"><input type="checkbox" data-path="m" data-run="10" data-mark="done"> Done</label>
+              <label class="m-na"><input type="checkbox" data-path="m" data-run="10" data-mark="na"> N/A</label>
+            </div>
+          </div>
+          <div class="run-body">
+            <p>Press <strong>Export &rarr; eMASS PPSM Template (.xlsx)</strong>, then <strong>Save Session</strong>.</p>
+            <div class="run-gives"><b>Gives you:</b> The submission workbook, and a file you can reopen and carry on from.</div>
+            
+          </div>
+        </li>
+    </ol>
+
+    <div class="note">
+      <p><strong>Steps 2 and 4 are the ones that matter most.</strong> If you are short on time, run the collector and take the firewall table. Step 1 makes the result much richer where ACAS already scans the enclave, and step 3 only applies if there are Linux hosts.</p>
+      <p><strong>You do not have to fill anything in first.</strong> The system name, the enclave labels, the collector and the boundary are all worked out from the data. Simple mode is on by default and hides everything not needed for this path.</p>
+    </div>
+
+    <h3>What is left for you to do</h3>
+    <p>Three fields cannot be derived from traffic, because they are judgements rather than observations. The <strong>PPSM Review Checks</strong> panel lists exactly which rows are missing each one, and <strong>Export Findings</strong> writes that list to CSV so it can be handed round.</p>
+    <div class="tw"><table class="kv">
+      <thead><tr><th>Field</th><th>Where the answer comes from</th></tr></thead>
+      <tbody>
+        <tr><td>Mission Justification</td><td>The system or application owner. Why the flow needs to exist. This is what a reviewer reads first.</td></tr>
+        <tr><td>CAL / VA Report Reference</td><td>The PPSM CAL. Look the service up before registering; if it is already listed, cite its VA report rather than raising a duplicate.</td></tr>
+        <tr><td>Assurance Category</td><td>The CAL entry for that service, or your own CLSA for a local one.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Fill them in the table directly, or select several rows and use <strong>Bulk apply</strong> to set the same value across all of them at once.</p>
+
+    <p class="hint">Everything below is the long form: what each command produces, how the boundary is decided, and what reviewers send packages back for. Read it once, then work from the cards above.</p>
+  </section>
+
+  <!-- ============ WHICH IP ============ -->
+  <section id="whichip-sec">
+    <h2 class="sec">Which address ends up where</h2>
+    <p>Every source writes the two ends of a flow differently, and PPSM registers the <strong>listening service</strong> &mdash; never the client. One rule covers all of it: <strong>the end offering the service becomes the Destination</strong>, and whoever reached it becomes the Source. Each collection card says which column that is; this is the same thing in one place.</p>
+    <div class="tw"><table class="kv"><thead><tr><th style="width:20%">Source</th><th style="width:26%">Becomes Destination IP</th><th style="width:22%">Becomes Source IP</th><th>Note</th></tr></thead><tbody><tr><td><strong>ss / netstat</strong></td><td>Local Address (on a LISTEN line)</td><td>the peer, on an ESTAB line</td><td>A listener is the service. <code>0.0.0.0</code> means this host.</td></tr><tr><td><strong>Get-NetTCPConnection</strong></td><td>LocalAddress when State is Listen; otherwise the better-known port</td><td>the other end</td><td>The <b>State</b> column decides.</td></tr><tr><td><strong>Get-NetUDPEndpoint</strong></td><td>LocalAddress</td><td>(none recorded)</td><td>UDP has no state; every row is a listener.</td></tr><tr><td><strong>show conn (ASA/FTD)</strong></td><td>the end with the well-known port</td><td>the other end</td><td>Interface names set the zone columns.</td></tr><tr><td><strong>FMC connection events</strong></td><td>Responder IP</td><td>Initiator IP</td><td>Named outright, so nothing is guessed.</td></tr><tr><td><strong>FMC servers report</strong></td><td>IP Address</td><td>(none)</td><td>A discovered listening service.</td></tr><tr><td><strong>NetFlow cache</strong></td><td>IPV4 DST ADDR</td><td>IPV4 SRC ADDR</td><td>Ingress interface gives the direction.</td></tr><tr><td><strong>Top conversations</strong></td><td>the endpoint holding the service port</td><td>the other endpoint</td><td>Turned round if the report lists the server first.</td></tr><tr><td><strong>Zeek conn.log</strong></td><td>id.resp_h</td><td>id.orig_h</td><td>Responder is the service, by definition.</td></tr><tr><td><strong>Windows Firewall log</strong></td><td>the end with the well-known port</td><td>the other end</td><td>RECEIVE lines list the server first and are turned round.</td></tr><tr><td><strong>ASA syslog 302013/302015</strong></td><td>the end with the well-known port</td><td>the other end</td><td></td></tr><tr><td><strong>pcap / tcpdump</strong></td><td>the end with the well-known port</td><td>the other end</td><td>A SYN, where present, settles it outright.</td></tr><tr><td><strong>nmap / Nessus</strong></td><td>the scanned host</td><td>(none)</td><td>A scan finds listeners, not conversations.</td></tr><tr><td><strong>access-list / policy</strong></td><td>destination network</td><td>source network</td><td>Object groups expand to one row per host.</td></tr><tr><td><strong>DNS forward zone</strong></td><td>name &rarr; address</td><td></td><td>Fills the hostname on rows that have the address.</td></tr><tr><td><strong>DNS reverse zone</strong></td><td>address &rarr; name</td><td></td><td>The owner is the address written backwards.</td></tr></tbody></table></div>
+    <div class="note">
+      <p><strong>Addresses that point nowhere.</strong> A few values look like addresses but are not ones a register can cite, and the builder handles each rather than carrying it through:</p>
+      <ul class="tight">
+        <li><code>0.0.0.0</code> and <code>*</code> mean <em>every interface on this host</em>. They are attributed to the machine the file came from &mdash; which is why the collector writes a <code># ppsm-host:</code> line, and why a Windows CSV should be named after its host.</li>
+        <li><code>127.0.0.1</code> and <code>127.0.0.53</code> are loopback. A service bound only to loopback cannot leave the host, so it crosses no boundary and is not registrable. Those rows are skipped and the count is shown on the import line.</li>
+        <li><strong>IPv4 only.</strong> Any IPv6 row is set aside on import and the count is shown, so a stray AAAA record or a link-local flow never reaches the register. Turn that off under Settings if the enclave really does run dual stack.</li>
+        <li>An ephemeral port as the <em>destination</em> &mdash; 32768&ndash;60999 or 49152&ndash;65535 &mdash; nearly always means the capture was read backwards. The review checks flag those rather than registering the client as a service.</li>
+        <li>A MAC address is not an endpoint, and a network such as <code>172.22.14.0/24</code> stays a network: it is a valid rule source, but it never gains a hostname.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ EMASS FIELDS ============ -->
+  <section id="emass-sec">
+    <h2 class="sec">What the eMASS template needs from you</h2>
+    <p>The export matches the <strong>PPSM Boundary Information Import Template</strong> exactly: the same 21 columns in the same order, the same header block, and the Glossary and Instructions sheets alongside. Its own instructions say that <strong>every field except Purpose is required</strong>, so anything the collection cannot observe has to come from you. Most of it is set once and applies to every row.</p>
+
+    <h3>Set once, under Settings</h3>
+    <div class="tw"><table class="kv">
+      <thead><tr><th style="width:26%">Setting</th><th>Fills</th></tr></thead>
+      <tbody>
+        <tr><td>DNS domain</td><td><strong>Source FQDN</strong> and <strong>Destination FQDN</strong>. A short name plus your domain makes the fully qualified name the template asks for. Collecting the DNS zones is the better answer, but this covers what they miss.</td></tr>
+        <tr><td>Physical location of this enclave</td><td><strong>Source</strong> and <strong>Destination Physical Location or Cloud Service Provider</strong>, for anything inside your ranges. Building, base, room &mdash; whatever your organisation uses.</td></tr>
+        <tr><td>Label for anything outside</td><td>The same two columns for external addresses. A cloud provider name where that is what it is, otherwise something like <em>External (non-DoD)</em>.</td></tr>
+        <tr><td>VPN Tunnel Type when there is no tunnel</td><td><strong>VPN Tunnel Type</strong> on ordinary traffic. Left blank by default; set it to <em>N/A</em> if your reviewer expects the column filled.</td></tr>
+        <tr><td>Boundary for internal rows</td><td><strong>Boundary</strong>. The template has no plain "Internal", so internal traffic exports as one of the Internal Use Only boundaries &mdash; 18 by default.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Fill in the system header</h3>
+    <p>Open <strong>eMASS template header</strong> under System Identification. These go into the block above the column headings, and none of them can be worked out from traffic: Exported By, Office / Org, Information System Owner, System ID, DITPR ID, POC name, phone and e-mail, and the Date Reviewed / Updated with who reviewed it.</p>
+
+    <h3>Fill in per row</h3>
+    <p><strong>Purpose</strong> is the one field the template marks optional, and the one a reviewer reads first. It is the mission justification: why this flow needs to exist. Select several rows and use <strong>Bulk apply</strong> where a group shares a reason.</p>
+    <p>Everything else the export fills from what was collected. When you press <strong>Export &rarr; eMASS PPSM Template (.xlsx)</strong> the tool names any required field still empty and how many rows it affects, so you can see what is left before the workbook goes anywhere.</p>
+
+    <div class="note">
+      <p><strong>Do not restructure the workbook.</strong> The importer reads columns by position, and the template's own instructions say not to delete columns or sheets, remove the classification label, or add columns. The export already respects the character limits it sets &mdash; 20 for Port and Protocol, 40 for the Application/Software Record Name, 500 for Source and Destination, 750 for the FQDN and IP fields, 1500 for the location fields and 1000 for Purpose &mdash; and truncates rather than letting a row be rejected.</p>
+    </div>
+  </section>
+
+  <!-- ============ FILES REFERENCE ============ -->
+  <section id="files-sec">
+    <h2 class="sec">Every file the builder reads</h2>
+    <p>The collection cards above gather all of these. This is the same list by file, so you can check a folder before you import it, or see what a missing file will cost you.</p>
+    <div class="tw"><table class="files"><thead><tr><th style="width:24%">File</th><th style="width:40%">How to get it</th><th>What it gives the register</th></tr></thead><tbody><tr class="fgroup"><td colspan="3"><span>Required</span> &mdash; the register cannot be built without these</td></tr><tr><td><span class="dev dev-host-win">Windows host</span><br><strong>Ports and connections</strong></td><td>Collector, or <code>Get-NetTCPConnection</code> / <code>netstat -ano</code> &mdash; group A<div class="saveas">Save as <code>hosts\&lt;host&gt;-connections.csv</code></div></td><td>Every listening service and every connection, with the process behind each port.</td></tr><tr><td><span class="dev dev-host-nix">Linux host</span><br><strong>Ports and connections</strong></td><td>Collector, or <code>ss -tuanp</code> with the <code>ppsm-host</code> line &mdash; group B<div class="saveas">Save as <code>hosts/&lt;host&gt;-sockets.txt</code></div></td><td>The same for Linux.</td></tr><tr><td><span class="dev dev-fw">Firewall</span><br><strong>Connection table</strong></td><td><code>terminal pager 0</code> then <code>show conn all</code> &mdash; or FMC Connection Events<div class="saveas">Save as <code>network\firewall-showconn.txt</code></div></td><td>What actually crosses the boundary, with the interface names that set the Boundary column.</td></tr><tr><td><span class="dev dev-dc">Domain controller</span><br><strong>At least one name source</strong></td><td>AD export and/or DNS zones (below). Without one the register is a list of bare addresses.<div class="saveas">Save as <code>inventory\ad-computers.csv</code></div></td><td>A name for each address.</td></tr><tr class="fgroup"><td colspan="3"><span>Strongly recommended</span> &mdash; each one closes gaps the required files leave</td></tr><tr><td><span class="dev dev-dc">DNS server</span><br><strong>DNS zones, forward and reverse</strong></td><td>The collector on a domain controller, or the <code>Get-DnsServerResourceRecord</code> command on the manual path; BIND zone files; <code>dnscmd /zoneprint</code><div class="saveas">Save as <code>inventory\dns-records.csv &middot; zone-*.zone / *.rev</code></div></td><td>The authoritative hostname for every address, used to fill names into every row from every file, and addresses into rows that only had a name.</td></tr><tr><td><span class="dev dev-fw">Firewall</span><br><strong>Ruleset</strong></td><td><code>show running-config access-list</code> and <code>object-group</code>; or the FMC policy report (PDF) or CSV<div class="saveas">Save as <code>network\firewall-acl.txt</code></div></td><td>What is <em>permitted</em>. Reveals rules nobody uses and traffic no rule authorises.</td></tr><tr><td><span class="dev dev-wks">Your workstation</span><br><strong>ACAS / Nessus scan</strong></td><td>Tenable.sc &rarr; export the enclave scan as Nessus<div class="saveas">Save as <code>*.nessus</code></div></td><td>Credentialed listening services with version banners, already collected.</td></tr><tr><td><span class="dev dev-sw">Switch</span><br><strong>NetFlow</strong></td><td><code>show flow monitor &lt;name&gt; cache format csv</code>, or a NetFlow analyser's Top Conversations report<div class="saveas">Save as <code>network\&lt;switch&gt;-netflow.csv &middot; *.xlsx</code></div></td><td>East-west flows the firewall never sees.</td></tr><tr><td><span class="dev dev-fmc">FMC console</span><br><strong>FMC Servers and Hosts reports</strong></td><td>Analysis &rarr; Hosts &rarr; Servers, and the Hosts table &mdash; group C<div class="saveas">Save as <code>network\*.csv</code></div></td><td>Discovered listening services, and hostnames and operating systems nothing else knows.</td></tr><tr class="fgroup"><td colspan="3"><span>When you have them</span> &mdash; situational; read automatically if dropped in</td></tr><tr><td><span class="dev dev-fmc">FMC console</span><br><strong>Intrusion / Security Intelligence events</strong></td><td>Analysis &rarr; Intrusions / Security Intelligence<div class="saveas">Save as <code>*.csv</code></div></td><td>Traffic the sensor flagged, recorded as flagged rather than approved.</td></tr><tr><td><span class="dev dev-fmc">FMC console</span><br><strong>Site-to-site VPN report</strong></td><td>Devices &rarr; VPN &rarr; Site To Site<div class="saveas">Save as <code>*.csv</code></div></td><td>Tunnels, with the B15 / B16 decision raised for you.</td></tr><tr><td><span class="dev dev-host-nix">Linux host</span><br><strong>Zeek conn.log</strong></td><td>From the sensor's log directory<div class="saveas">Save as <code>conn.log</code></div></td><td>Services on non-standard ports; <code>conn_state</code> separates real sessions from scans.</td></tr><tr><td><span class="dev dev-ctrl">Any host</span><br><strong>Packet capture</strong></td><td><code>tcpdump -nn -w</code>, <code>pktmon</code> (convert with <code>etl2pcap</code>), Wireshark<div class="saveas">Save as <code>*.pcap / *.pcapng</code></div></td><td>Flows no other source can see, such as same-segment traffic.</td></tr><tr><td><span class="dev dev-host-win">Windows host</span><br><strong>Windows Firewall log and rules</strong></td><td><code>pfirewall.log</code>; <code>Get-NetFirewallRule</code> exported to CSV<div class="saveas">Save as <code>pfirewall.log &middot; *.csv</code></div></td><td>Allowed and dropped traffic at the host, and its own ruleset.</td></tr><tr><td><span class="dev dev-fw">Firewall</span><br><strong>Firewall syslog, iptables, Palo Alto</strong></td><td>ASA 302013/302015 syslog; <code>iptables-save</code>; PAN <code>set</code>-format config<div class="saveas">Save as <code>*.log / *.txt</code></div></td><td>More flows, and more rules.</td></tr><tr><td><span class="dev dev-wks">Your workstation</span><br><strong>nmap scan</strong></td><td><code>nmap -sV -oX</code><div class="saveas">Save as <code>*.xml</code></div></td><td>Listening services, from the network side.</td></tr><tr><td><span class="dev dev-ctrl">Any host</span><br><strong>Other name sources</strong></td><td>hosts files, DHCP leases, neighbour tables, a CMDB export<div class="saveas">Save as <code>inventory\*</code></div></td><td>Extra names, ranked below DNS and AD when they disagree.</td></tr><tr><td><span class="dev dev-wks">Your workstation</span><br><strong>The work list, filled in</strong></td><td>Export Unidentified from the builder, fill in the names, import it back<div class="saveas">Save as <code>*.csv</code></div></td><td>The last few names, from the people who own those systems.</td></tr></tbody></table></div>
+    <div class="note">
+      <p><strong>Formats.</strong> Anything here can arrive as CSV, as an Excel <code>.xlsx</code> workbook, or as a text-based PDF, and the builder identifies each file from its contents rather than its name. It will not read older binary <code>.xls</code> files (save them as <code>.xlsx</code>), scanned or image-only PDFs, or zip archives (extract them first). Read-me and notes files in the folder are skipped.</p>
+      <p><strong>How names are cross-referenced.</strong> Every name source feeds one inventory, and that inventory is applied to every row from every file, in both directions: an address gains its hostname, a hostname gains its address, and a short name such as <code>WSUS11</code> is completed to <code>wsus11.range2.mil</code>. Where sources disagree the most authoritative wins &mdash; reverse DNS, then forward DNS and AD, then the host itself, scans, hosts files, FMC discovery, DHCP, NetFlow labels, and ARP last &mdash; and the losing names are kept as aliases so a lookup by any of them still lands on the right host. A short name shared by two different hosts is never guessed.</p>
+    </div>
+  </section>
+
+  <!-- ============ STEPS ============ -->
+  <section id="procedures">
+    <h2 class="sec">Procedures for use</h2>
+    <p>The following steps walk through how to use this tool to build a PPSM.</p>
+
+    <!-- STEP 1 -->
+    <article class="step" id="step1" data-step="1">
+      <div class="step-head">
+        <div class="step-num">1</div>
+        <h3>Identify the system</h3>
+      </div>
+      <p>Fill in the <strong>System Identification</strong> card at the top. These values flow into every export, so getting them right once saves cleanup later.</p>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Field</th><th>What to enter</th></tr></thead>
+        <tbody>
+          <tr><td>System / Enclave Name</td><td>The system you are documenting. Used as the filename stem on every export.</td></tr>
+          <tr><td>Network Environment</td><td>Unclassified, Classified, or Other (pick <em>Other</em> to type your own).</td></tr>
+          <tr><td>System Classification</td><td>Classification of the system itself. Metadata only — this does not set the banner.</td></tr>
+          <tr><td>Document Classification</td><td>Classification of the PPSM document you are producing. This drives the coloured banner. Kept separate on purpose: an UNCLASSIFIED PPSM can describe a classified system.</td></tr>
+          <tr><td>Version, Description, POC, Date</td><td>Straightforward. Date defaults to today.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="step-foot">
+        <label class="mark"><input type="checkbox" data-check="1"> Step 1 complete</label>
+        <a class="next" href="#step2">Next: gather the data</a>
+      </div>
+    </article>
+
+    <!-- STEP 2 -->
+    <article class="step" id="step2" data-step="2">
+      <div class="step-head">
+        <div class="step-num">2</div>
+        <h3>Gather the data</h3>
+      </div>
+      <p>Collect from the broadest source you have access to first, then fill gaps with host-level tools. Below is the exact command or path for each supported input.</p>
+
+      <h4>Packet captures (pcap / pcapng)</h4>
+      <p>A capture shows actual observed traffic rather than a point-in-time table, so it is the most detailed source available. It is also the most <em>focused</em>: a host capture sees only what crosses that one interface.</p>
+      <div class="note">
+        <p><strong>When to reach for a host capture.</strong> Running tcpdump or pktmon on an endpoint is the right call when none of the other collection points sit in a physical location that can see the traffic you are after. A NetFlow collector or a firewall only observes what routes through it, so an east-west flow between two hosts on the same switched segment never appears there. If the flow you need is not showing up in NetFlow or the firewall connection table, that is the signal to go capture it on the host itself.</p>
+      </div>
+      <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">LINUX HOST</span> the host you want to capture on</span><span>tcpdump</span></div><pre>tcpdump -i eth0 -nn -s0 -w capture.pcap</pre></div>
+      <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">WINDOWS HOST</span> the host you want to capture on</span><span>pktmon — built in, no install</span></div><pre>pktmon start --capture --pkt-size 0 -f capture.etl
+pktmon stop
+pktmon etl2pcap capture.etl -o capture.pcap</pre></div>
+      <p>Both <code>tcpdump</code> and <code>pktmon</code> above write a file the tool reads directly, so Wireshark is not required at any point. If Wireshark is available and you would rather work with a capture there first, the steps are:</p>
+      <ol class="tight">
+        <li>Move the <code>.pcap</code> file to the machine running Wireshark. On a standalone or air-gapped system this is normally an approved transfer to removable media.</li>
+        <li>Open Wireshark and choose <strong>File → Open</strong>, then select the capture. Wireshark reads the tcpdump and pktmon output as-is.</li>
+        <li>To capture inside Wireshark instead, pick the interface on the start screen and press the blue shark-fin button; press the red square to stop.</li>
+        <li>To narrow a large capture before importing, type a filter such as <code>ip.addr == 10.20.30.15</code> into the display filter bar, then use <strong>File → Export Specified Packets</strong> and choose <em>All packets (Displayed)</em>.</li>
+        <li>Save with <strong>File → Save As</strong> and choose <em>Wireshark/tcpdump/… - pcap</em> or <em>pcapng</em>. Both formats import.</li>
+      </ol>
+      <div class="note">
+        <p>Wireshark is not installed everywhere and often is not approved on mission systems. Nothing in this procedure depends on it — the native capture tools already produce an importable file.</p>
+      </div>
+      <div class="note">
+        <p>Capture for long enough to catch periodic traffic. A five-minute capture will miss anything that runs on a fifteen-minute timer.</p>
+      </div>
+
+      <h4>Only feed it data</h4>
+      <p>Import logs, scans and captures. Documents, instructions and notes are not data sources, and the tool now says so rather than trying to read them. Every parsed row is checked before it reaches the register: both endpoints have to be a real address or hostname, ports have to be numeric and in range, and the protocol has to be one it recognises. Anything that fails is dropped and the count is reported on the import line.</p>
+
+      <h4>Firepower / FMC reports</h4>
+      <p>If you run FMC, its reports are the single most productive thing you can export, and you do not have to say which is which &mdash; the tool works it out from the column names. Export any of these to CSV and drop them in:</p>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Report</th><th>What it contributes</th></tr></thead>
+        <tbody>
+          <tr><td>Connection Events</td><td>The richest of the family. Initiator and responder settle direction rather than it being guessed from port numbers, security zones drive the boundary, and the access control rule ties each flow to the line that permitted it.</td></tr>
+          <tr><td>Servers</td><td>Discovered listening services, the closest thing FMC has to a credentialed port enumeration. Vendor and version become the banner.</td></tr>
+          <tr><td>Network Discovery &mdash; Hosts</td><td>NetBIOS names and operating systems. Read as a name source, so it names endpoints no other source knows.</td></tr>
+          <tr><td>Intrusion / Security Intelligence Events</td><td>Traffic the sensor flagged. Recorded as <em>Flagged by sensor</em>, because an alert proves traffic happened, not that it is authorised.</td></tr>
+          <tr><td>Applications</td><td>Application names against ports.</td></tr>
+          <tr><td>Site-to-Site VPN</td><td>Tunnels, flagged as encrypted traffic with the B15 versus B16 decision raised for you.</td></tr>
+          <tr><td>Access Control Rules</td><td>What is permitted, read by the rules reader.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note">
+        <p>The detected report type is shown on the import line. If it reads something unexpected you will see it there rather than having to work it out from the rows.</p>
+        <p>Export as <strong>CSV</strong>, not PDF. FMC will happily give you a PDF and the tool can recover text from one, but the columns survive far better as CSV.</p>
+      </div>
+
+      <h4>NetFlow reports in Excel</h4>
+      <p>If your NetFlow analyser gives you a <em>top conversations</em> or <em>top talkers</em> report, export it as <strong>.xlsx</strong> or CSV and drop it in as it is &mdash; title rows, several sheets and a Total line at the bottom are all fine. Endpoints written as <code>hostname (address)</code> are split, ports are pulled out of labels like <code>oracle (1521/TCP)</code>, and traffic in MB or GB becomes a byte count. Pick the longest reporting window the analyser offers; thirty days catches monthly jobs that a one-day report misses.</p>
+
+      <h4>The access control policy as a PDF</h4>
+      <p>If the only form of the policy you can get out of FMC is its printed report, that works. Both of FMC's layouts are read &mdash; the wide table with a row per rule, and the per-rule blocks of labelled fields &mdash; including wrapped cells and policies that run across several pages. Load your name sources in the same import: where the policy names objects instead of addresses, they are resolved against them.</p>
+      <div class="note">
+        <p>A CSV export of the policy is still the most reliable form if your FMC version offers one. The PDF reader works from where each piece of text sits on the page, which handles every layout tested so far, but a CSV has nothing to interpret.</p>
+      </div>
+
+      <h4>Logs that ended up in a PDF</h4>
+      <p>If a log was printed or pasted into a PDF before it reached you, import the PDF directly. The text is pulled back out and run through the normal parsers, so a Zeek conn.log, a firewall connection table or a NetFlow cache all still work. The one case it cannot help with is a scanned page or an image export, because there is no text in the file to recover — you get told that rather than an empty import.</p>
+      <div class="note">
+        <p>The original text is always better if you can get it. A PDF loses column alignment, and a long line can be re-wrapped in a way no parser can undo.</p>
+      </div>
+
+      <h4>Firewall connection table</h4>
+      <p>There are two ways to reach the connection table. Use whichever matches your access.</p>
+
+      <p><strong>Option A — through Firewall Management Center (usually the easier route).</strong> FMC can open a CLI session against a managed device without needing SSH access to the device itself:</p>
+      <ol class="tight">
+        <li>Log in to FMC in a browser.</li>
+        <li>Go to <strong>Devices → Device Management</strong> and find the device.</li>
+        <li>Open the device, then use the <strong>Threat Defense CLI</strong> feature to open a session against it.</li>
+        <li>Set the command type to <em>show</em>, enter <code>conn all</code>, and run it.</li>
+        <li>Copy the output out of the results pane into a <code>.txt</code> file.</li>
+      </ol>
+
+      <p><strong>Option B — direct SSH to the device.</strong> Requires network reachability to the management interface and an account on the device:</p>
+      <ol class="tight">
+        <li>Start your terminal client and turn on session logging <em>before</em> connecting, so the output is captured to a file. In PuTTY this is <strong>Session → Logging → All session output</strong>; with OpenSSH use <code>ssh admin@10.x.x.x | tee firewall-conn.txt</code>.</li>
+        <li>SSH to the management address of the ASA or FTD device.</li>
+        <li>On FTD you land in the Threat Defense CLI. Enter <code>system support diagnostic-cli</code> to reach the ASA-style prompt, then <code>enable</code> (the password is often blank on FTD — press Enter).</li>
+        <li>Turn off paging so the output is not broken up by <em>--More--</em> prompts, then dump the table.</li>
+      </ol>
+      <p class="hint">The two commands themselves are on collection card C5 (scripted) or C7 (manual).</p>
+      <p>Save the captured text and drop it in. Interface names on each line are pulled into the <strong>Source Zone</strong> and <strong>Destination Zone</strong> columns, which is what makes the zone-to-zone diagram view useful.</p>
+      <div class="note">
+        <p><strong>Strip the terminal formatting if you can.</strong> A logged SSH session carries ANSI colour and cursor codes alongside the text. The tool removes them on import, but if your terminal offers a plain-text or "printable output only" logging mode, use it — the file will be cleaner and easier to check by eye.</p>
+      </div>
+
+      <h4>NetFlow cache</h4>
+      <p>The commands are on collection card C6. What matters when you run them:</p>
+      <ul class="tight">
+        <li><code>show flow monitor ?</code> lists the monitors that exist on that switch. Nothing listed means NetFlow is not configured there &mdash; mark the card N/A and move to the next switch rather than trying to configure it.</li>
+        <li>The CSV form is the easiest to work with. The table and per-record forms import too, so use whichever your platform produces.</li>
+        <li>NetFlow is the only source that sees traffic between two hosts on the same segment, because that traffic never reaches the firewall.</li>
+      </ul>
+
+      <h4>Host connection tables</h4>
+      <p>The commands are on the collection cards at the top &mdash; card A2 for Windows, card B5 for Linux. Three things about them are worth knowing:</p>
+      <ul class="tight">
+        <li><strong>Run them elevated.</strong> Without Administrator or <code>sudo</code> the process column comes back empty, and that column is what proves a port is a real listening service rather than a passing connection.</li>
+        <li><strong>Listeners and connections are both wanted.</strong> Listeners alone tell you what a host offers; the connections tell you what it actually reaches, which is what the boundary is decided from.</li>
+        <li><strong>PowerShell writes redirected output as UTF-16.</strong> The tool detects and decodes that on its own, so there is nothing to convert.</li>
+      </ul>
+
+      <h4>Logs</h4>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Source</th><th>Where to get it</th></tr></thead>
+        <tbody>
+          <tr><td>Windows Firewall</td><td><code>%systemroot%\system32\LogFiles\Firewall\pfirewall.log</code> (enable logging in the firewall profile first)</td></tr>
+          <tr><td>iptables / UFW</td><td><code>/var/log/ufw.log</code> or <code>/var/log/kern.log</code></td></tr>
+          <tr><td>ASA / FTD syslog</td><td>Any collector holding 302013 / 302015 "Built connection" messages</td></tr>
+          <tr><td>Zeek / Bro</td><td><code>conn.log</code> — TSV or JSON lines, both work</td></tr>
+          <tr><td>tcpdump text</td><td>Saved output of <code>tcpdump -nn</code> without <code>-w</code></td></tr>
+        </tbody>
+      </table></div>
+
+      <h4>Scans</h4>
+      <div class="cmd"><div class="cmd-bar"><span class="os"><span class="os-dev">YOUR WORKSTATION</span> nmap, pointed at the target range</span><span>XML output is required</span></div><pre>nmap -sS -sV -oX scan.xml 10.20.10.0/24</pre></div>
+      <p>It must be <code>-oX</code> (XML). Normal and greppable output will not import. For Tenable/ACAS, use <strong>Export → Nessus (.nessus)</strong> — not the HTML or PDF report.</p>
+
+      <h4>Host name sources</h4>
+      <p>These files carry no traffic. They tell the tool what each address is called, so the register comes out naming systems instead of addresses. <strong>Gather at least one.</strong></p>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Source</th><th>Where to get it</th></tr></thead>
+        <tbody>
+          <tr><td>AD computer export</td><td><code>Get-ADComputer -Filter * -Properties DNSHostName,IPv4Address,OperatingSystem | Export-Csv ad.csv</code></td></tr>
+          <tr><td>CMDB / asset inventory</td><td>Any CSV with an IP column and a name column. Operating system and owner are picked up too when present.</td></tr>
+          <tr><td>DNS zone file</td><td>The A / AAAA records from your authoritative zone</td></tr>
+          <tr><td>hosts file</td><td><code>/etc/hosts</code>, or <code>%systemroot%\system32\drivers\etc\hosts</code></td></tr>
+          <tr><td>ARP table</td><td><code>ip neigh</code> — only helps where the OS already resolved a name</td></tr>
+          <tr><td>nmap / Nessus</td><td>Already carry hostnames and FQDNs; names are learned automatically on import</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note tip">
+        <p>An AD or CMDB export is the single most valuable file you can bring, because it names the systems and tells you who owns them.</p>
+      </div>
+
+      <div class="step-foot">
+        <label class="mark"><input type="checkbox" data-check="2"> Step 2 complete</label>
+        <a class="next" href="#step3">Next: import</a>
+      </div>
+    </article>
+
+    <!-- STEP 3 -->
+    <article class="step" id="step3" data-step="3">
+      <div class="step-head">
+        <div class="step-num">3</div>
+        <h3>Import</h3>
+      </div>
+      <p>Set the import options <strong>before</strong> dropping files, because they are stamped on at import time and are tedious to fix afterwards.</p>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Option</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>Include active connections</td><td>Capture host-to-host flows, not only listening ports.</td></tr>
+          <tr><td>Air-gapped</td><td>Anything the addresses cannot place is treated as <code>Internal</code> &mdash; no B number, which is correct for traffic that crosses no CAL-defined boundary. Leave it on for a standalone enclave; turn it off where flows genuinely leave and you would rather set the boundary yourself</td></tr>
+          <tr><td>Enclave for this import</td><td>Scan and capture files carry no enclave name, so stamp it here.</td></tr>
+          <tr><td>Listener source port</td><td>The client side of an inbound flow is an ephemeral port, so it is a range, not a number. Default <code>1024-65535</code>. Windows is <code>49152-65535</code>; Linux is <code>32768-60999</code>.</td></tr>
+          <tr><td>Collector / source host</td><td>The machine the data was gathered <strong>from</strong> — the NetFlow collector, the firewall, the host you captured on. Nothing in a capture file records this, and PPSM review always asks. Set it every import.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Then drag your files onto the <strong>Ingest</strong> box, or click to browse. Multiple files at once is fine, and formats can be mixed. Each file logs a line underneath showing the format detected and how many entries it produced. If a file produces nothing, a popup explains why.</p>
+      <div class="note warn">
+        <p>Because the collector is stamped per import, <strong>do one import per collection source</strong>. Import the firewall capture with the collector set to the firewall, then change it and import the workstation capture. That way every row can be traced back to where it was observed.</p>
+      </div>
+      <div class="step-foot">
+        <label class="mark"><input type="checkbox" data-check="3"> Step 3 complete</label>
+        <a class="next" href="#step4">Next: work the register</a>
+      </div>
+    </article>
+
+    <!-- STEP 4 -->
+    <article class="step" id="step4" data-step="4">
+      <div class="step-head">
+        <div class="step-num">4</div>
+        <h3>Work the register</h3>
+      </div>
+      <p>Every cell is editable. What the import cannot know — boundary, data description, classification, mission justification — is what you fill in.</p>
+      <p>The left edge of each row is colour-coded:</p>
+      <div class="legend">
+        <div><span class="bar-sw yl"></span><span><strong>Yellow</strong> — a crossing worth reviewing (Inter-enclave, Interconnection, or a DISN boundary)</span></div>
+        <div><span class="bar-sw tl"></span><span><strong>Teal</strong> — Internal, no boundary crossed</span></div>
+        <div><span class="bar-sw nn"></span><span><strong>No bar</strong> — the boundary has not been set yet. Work until no bars are missing.</span></div>
+      </div>
+      <ul>
+        <li><strong>Dedupe</strong> collapses identical entries. Run it after importing overlapping sources.</li>
+        <li><strong>Search</strong> matches every field by default; narrow it to one column with the dropdown next to it. The Enclave, Boundary, Source and Collector filters combine with it.</li>
+        <li><strong>Filters only change the view.</strong> They never change what gets exported.</li>
+      </ul>
+
+      <h4>Bulk-apply</h4>
+      <p>Bulk-apply is the part worth learning. It sets one field across many rows at once:</p>
+      <ul>
+        <li>If you have rows <strong>checked</strong>, it targets those.</li>
+        <li>Otherwise it targets <strong>everything currently passing your filters</strong> — the label tells you which and how many.</li>
+      </ul>
+      <p><strong>Typical use:</strong> Filter to <code>10.20.10</code>, bulk-set Enclave to <code>ALPHA</code>. Or filter to destination port <code>9997</code>, bulk-set Data Service to <code>splunk-forwarder</code> and Mission Justification to the log-forwarding rationale.</p>
+      <div class="step-foot">
+        <label class="mark"><input type="checkbox" data-check="4"> Step 4 complete</label>
+        <a class="next" href="#step5">Next: identify the endpoints</a>
+      </div>
+    </article>
+
+    <!-- STEP 5 -->
+    <article class="step" id="step5" data-step="5">
+      <div class="step-head">
+        <div class="step-num">5</div>
+        <h3>Identify the endpoints</h3>
+      </div>
+      <p>This is the <strong>discovery half</strong> of PPSM. Flows tell you which ports are in use. The <strong>Endpoints panel</strong> tells you which systems are on the network, what each one is called, and what it serves.</p>
+      <p>Every distinct address in the register appears once, with:</p>
+      <ul>
+        <li>The role it plays (Server, Client, or Both)</li>
+        <li>The services it answers on</li>
+        <li>How many flows and distinct peers it has</li>
+        <li>Which collector observed it</li>
+      </ul>
+      <p>Rows for unidentified systems are tinted and carry an input box — type a hostname into it and the name is applied across every matching row at once.</p>
+
+      <h4>Internal and external are scored separately</h4>
+      <ul>
+        <li><strong>Internal addresses</strong> (RFC1918 by default, plus any extra ranges you set in Settings) must be identified by hostname.</li>
+        <li><strong>External destinations</strong> are documented by service and purpose instead — a public web address has no internal hostname and is not counted against you.</li>
+      </ul>
+      <p>The counter at the top reads <strong>"% of internal systems identified"</strong>, and the target is <strong>100%</strong>.</p>
+
+      <h4>The work-list round trip</h4>
+      <p>The fastest way to close out discovery when you do not own the naming data:</p>
+      <ol>
+        <li><strong>Export the Unidentified Work List.</strong> It contains only internal systems with no name, with blank Hostname and Owner columns.</li>
+        <li><strong>Send it</strong> to whoever runs the network or owns the systems.</li>
+        <li><strong>Load the completed file back in</strong> with <em>Load Host Inventory</em>.</li>
+        <li>The names resolve across the whole register at once.</li>
+      </ol>
+      <div class="note warn">
+        <p>A system that shows up in traffic and that nobody can name is itself a finding. Do not quietly drop those rows — they are often the most important thing the exercise surfaces.</p>
+      </div>
+      <div class="step-foot">
+        <label class="mark"><input type="checkbox" data-check="5"> Step 5 complete</label>
+        <a class="next" href="#step6">Next: boundary diagram</a>
+      </div>
+    </article>
+
+    <!-- STEP 6 -->
+    <article class="step" id="step6" data-step="6">
+      <div class="step-head">
+        <div class="step-num">6</div>
+        <h3>Let the tool fill in what it can</h3>
+      </div>
+      <p>Most of the register follows from what was collected. The <strong>Fill In What Can Be Derived</strong> panel works those fields out instead of leaving you to type them, and it runs automatically as data comes in. By default it only writes into empty cells.</p>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Field</th><th>Where it comes from</th></tr></thead>
+        <tbody>
+          <tr><td>Boundary</td><td>The firewall zone names when the data carried them, otherwise whether each address is inside your ranges</td></tr>
+          <tr><td>Enclave</td><td>The subnet map in Settings (<code>10.20.10.0/24 = ALPHA</code>)</td></tr>
+          <tr><td>Source / Destination Hostname</td><td>The host inventory, applied across every matching row</td></tr>
+          <tr><td>Data Service, Data Description</td><td>The destination port and the service table, in plain language</td></tr>
+          <tr><td>Type, Connection Logical Points, VPN flag</td><td>The boundary and the address scope</td></tr>
+          <tr><td>Classification, Collector</td><td>The document header and the import default</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note">
+        <p><strong>A zone called "outside" does not mean the internet.</strong> On an enclave firewall it usually means "toward the enclave gateway". So the zone tells the tool which way the traffic is going and the address tells it how far: a private address behind an outside interface becomes B12, and only a genuinely public one becomes B14. Two internal addresses that your subnet map places in different enclaves are not internal-use-only either, because that traffic crosses the enclave gateway.</p>
+        <p><strong>Mission Justification, CAL status and Assurance Category are left alone on purpose.</strong> Those are determinations you make and defend, not things to infer from a port number. Assurance fills only from a service map you supply yourself.</p>
+      </div>
+
+      <div class="step-head">
+        <div class="step-num">7</div>
+        <h3>Set the boundary, then check the CAL</h3>
+      </div>
+      <p>Boundary is the field a reviewer looks at first. Most of it is already filled in by the time you get here, and most of it will say <strong>Internal</strong>.</p>
+
+      <div class="note">
+        <p><strong>Internal traffic gets no B number.</strong> Per the PPSM boundary definitions, internal means not crossing any CAL-defined boundary &mdash; and that explicitly includes the Enclave Gateway (B11/B12) and the Enclave DMZ (B9/B10). Traffic that stays inside is tagged <strong>Internal</strong>, which is a real value rather than a missing one. Do not go looking for a B number to put there.</p>
+        <p><strong>The tool never assigns a DISN boundary on its own.</strong> B1&ndash;B8 and B15 describe traffic crossing the DISN, and nothing in host output, a firewall connection table or a NetFlow cache can prove that a flow did. Those are yours to set where the architecture warrants it, and to confirm with your AO or ISSM.</p>
+      </div>
+
+      <p>What gets derived:</p>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>What the addresses show</th><th>What you get</th></tr></thead>
+        <tbody>
+          <tr><td>Both ends inside your ranges</td><td><strong>Internal</strong> &mdash; no B number, no CAL lookup, no submission</td></tr>
+          <tr><td>Inside reaching an address outside your ranges</td><td><strong>B14</strong> &mdash; Enclave GW to External (out)</td></tr>
+          <tr><td>Outside reaching in</td><td><strong>B13</strong> &mdash; External to Enclave GW (in)</td></tr>
+          <tr><td>Anything it cannot tell</td><td>Left blank for you</td></tr>
+        </tbody>
+      </table></div>
+
+      <p>If your enclave uses address space outside RFC1918, set <strong>Internal ranges</strong> under Settings before importing. Without it, traffic that is really internal reads as leaving the enclave and picks up a B14 it does not deserve.</p>
+
+      <p>Set the rest by hand where they apply. The full B1&ndash;B19 set is in the dropdown, and the review checks flag any internal flow that has ended up carrying a DISN boundary.</p>
+
+      <h4>How the sources fill each other's gaps</h4>
+      <p>No single source has the whole picture, so the tool reads them against each other. A ruleset knows what is permitted but not who used it; traffic knows who but not what authorises it; a scan knows the hostnames.</p>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Gap</th><th>Filled from</th></tr></thead>
+        <tbody>
+          <tr><td>A rule written against a network, so no specific source</td><td>The host that actually used it, with its hostname and source port, once traffic confirms which one</td></tr>
+          <tr><td>An observed flow with no authorising rule recorded</td><td>The matching rule, written into the Interconnection / Agreement Ref column</td></tr>
+          <tr><td>An address with no hostname</td><td>Any name source that knows it &mdash; AD, DNS, hosts file, a scan</td></tr>
+          <tr><td>A rule nobody used</td><td>Nothing. It keeps its network and no source port, because nothing observed it, and the review checks flag it instead</td></tr>
+        </tbody>
+      </table></div>
+      <p>Anything derived from an endpoint &mdash; enclave, boundary, the eMASS connection points &mdash; is recomputed once that endpoint is filled in, so a value worked out from a gap does not survive the gap being closed.</p>
+
+      <h4>Then check the CAL</h4>
+      <p>Only flows that actually cross a boundary need this. Look the service up on the PPSM CAL before registering: if it is already listed, cite its VA report rather than raising a duplicate, which is the single most common reason a submission comes back. Internal rows need no CAL reference, no assurance category and no submission path, and the review checks no longer ask for them.</p>
+
+      <div class="step-head">
+        <div class="step-num">8</div>
+        <h3>Run the review checks</h3>
+      </div>
+      <p>The <strong>PPSM Review Checks</strong> panel runs the register against what submissions actually get sent back for, sorted by how much trouble each one causes.</p>
+      <p>Two of them only appear once you have imported a ruleset alongside the traffic, and they are the most useful pair in the list:</p>
+      <ul class="tight">
+        <li><strong>Rule permits traffic that was never seen</strong> &mdash; either the collection missed it, or the rule is stale and should go forward for removal. Least functionality means the ruleset should not be wider than the traffic needs.</li>
+        <li><strong>Observed traffic with no rule behind it</strong> &mdash; either a ruleset is missing from your collection, or the traffic is taking a path nobody authorised.</li>
+      </ul>
+      <ul class="tight">
+        <li><strong>Must fix</strong> &mdash; no boundary set; a destination port in an ephemeral range; no CAL or VA reference cited; anything marked Red or Banned.</li>
+        <li><strong>Should fix</strong> &mdash; no data service identified (the CAL is organised by service, so a bare port number cannot be matched to anything); no assurance category; no mission justification; HTTP or HTTPS on a non-standard port, which needs an NSPU exception; B13 or B14 with no waiver noted.</li>
+        <li><strong>Worth a look</strong> &mdash; unnamed internal destinations, and duplicate registrations.</li>
+      </ul>
+      <p><strong>Export Findings</strong> writes the whole list to CSV with the offending rows attached, so it can be worked through away from the tool and handed to whoever owns each system.</p>
+
+      <div class="step-head">
+        <div class="step-num">9</div>
+        <h3>Boundary diagram</h3>
+      </div>
+      <p>The diagram is generated from the register, so the picture cannot drift away from the data. Regenerate it after you make edits. There are three views:</p>
+      <ul class="tight">
+        <li><strong>Environment diagram</strong> (default) — the topology of <em>your</em> environment. It draws only the PPSM connection points your register actually uses, labels the enclave nodes with your enclave names, and draws one arrow per boundary crossing found in the data, weighted by flow count and annotated with the ports that cross it. Crossings marked AO responsibility, DoDIN waiver or tunnel are called out. Anything whose boundary is not yet set appears in a "not yet mapped" strip along the bottom, so gaps are visible rather than silently omitted.</li>
+        <li><strong>Flow map</strong> — sources on the left, boundaries on the right. Useful for showing volume by enclave or by collector.</li>
+        <li><strong>16-boundary reference</strong> — the standard PPSM template drawing with the boundaries you use highlighted. This one is a fixed template, so it is for orientation rather than for depicting your environment.</li>
+      </ul>
+      <p>The diagram is generated from the register, so the picture cannot drift away from the data. <strong>Regenerate it after you make edits.</strong></p>
+
+      <h4>Flow map</h4>
+      <p>Built from your rows. Sources on the left, boundaries or destinations on the right, one curve per group. Line weight scales with flow count, the bubble shows the count, and each boundary node lists its busiest ports. Group by:</p>
+      <ul>
+        <li><strong>Enclave → Boundary</strong> for the standard view</li>
+        <li><strong>Source zone → Dest zone</strong> when you have firewall interface data</li>
+        <li><strong>Collector → Boundary</strong> to show coverage by collection point</li>
+      </ul>
+
+      <h4>DoD 16-boundary reference</h4>
+      <p>The standard PPSM boundary topology with every boundary that has traffic highlighted and labelled with its count. Boundaries with no data stay greyed out, which makes coverage gaps obvious. Non-DISN tags are summarised along the bottom.</p>
+      <ul>
+        <li><strong>Data scope</strong> switches between all rows and only the filtered rows — filter to one enclave to produce a per-enclave diagram.</li>
+        <li><strong>Theme</strong> offers Dark, Light, and Print (black and white for pasting into a document).</li>
+        <li><strong>Export</strong> as SVG (vector, scales cleanly in Word and PowerPoint), PNG at 1–4× scale, or straight to Print/PDF.</li>
+      </ul>
+      <div class="step-foot">
+        <label class="mark"><input type="checkbox" data-check="6"> Step 6 complete</label>
+        <a class="next" href="#step7">Next: export</a>
+      </div>
+    </article>
+
+    <!-- STEP 7 -->
+    <article class="step" id="step7" data-step="7">
+      <div class="step-head">
+        <div class="step-num">10</div>
+        <h3>Export</h3>
+      </div>
+      <p>Two of these matter most for submission:</p>
+      <ul class="tight">
+        <li><strong>eMASS PPSM Template (.xlsx)</strong> — the PPSM Boundary Information Import Template, with the same 21 columns (A–U) in the same order eMASS expects, plus the Glossary sheet so Boundary, the logical connection points, Type and VPN Tunnel Type keep working as dropdowns. Hostnames are split the way the template wants them: the short device name goes in the Device or Server Name column and the fully qualified name in the FQDN column. The <code>#</code> column is left blank because eMASS generates it on import.</li>
+        <li><strong>Excel (.xlsx)</strong> — the full working register with every column the tool tracks, for your own records and for review before submission.</li>
+      </ul>
+      <div class="note">
+        <p>The eMASS export fills everything derivable from collected data. Four fields cannot be derived and have to be set by you: <strong>Type</strong> (External Services or Least Function), <strong>Connection Logical Source Point</strong>, <strong>Connection Logical Destination Point</strong> and the <strong>VPN / Encrypted Tunnel Traffic</strong> flag. The export tells you how many rows are still missing them. You can fill them in the tool by unhiding those columns under Settings, or in Excel afterwards using the Glossary dropdowns.</p>
+        <p>Do not add, remove or reorder columns in the exported template, and do not delete the classification label or the Glossary sheet. eMASS rejects a template whose shape has changed.</p>
+      </div>
+      <div class="tw"><table class="kv">
+        <thead><tr><th>Export</th><th>Use it for</th></tr></thead>
+        <tbody>
+          <tr><td>Excel (.xlsx)</td><td>Formatted workbook with frozen header, autofilter, dropdowns, and highlighted crossings. Built offline with no libraries.</td></tr>
+          <tr><td>CSV</td><td>Feeding a registration template. Re-imports into this tool cleanly, so you can round-trip through Excel.</td></tr>
+          <tr><td>Printable Report</td><td>A print-ready page — Ctrl-P, Save as PDF.</td></tr>
+          <tr><td>Save Session (.json)</td><td>Complete working copy: metadata, every row, and your settings. This is your save file — use it between working sessions.</td></tr>
+          <tr><td>Save Profile (.json)</td><td>Settings only, no data. Share with the team so everyone's registers come out consistent.</td></tr>
+          <tr><td>Export Endpoints</td><td>The discovered system inventory: IP, hostname, scope, role, services offered, flow counts, peers, enclave, boundaries, OS, owner, and collector.</td></tr>
+          <tr><td>Unidentified Work List</td><td>Internal systems still missing a name, ready to send out for completion.</td></tr>
+          <tr><td>Host Inventory</td><td>Everything the tool has learned as IP-to-hostname, reusable on the next system.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note">
+        <p>Hidden columns drop out of CSV and Excel exports as well as the table, so hide what your program does not use before exporting.</p>
+      </div>
+      <div class="step-foot">
+        <label class="mark"><input type="checkbox" data-check="7"> Step 7 complete</label>
+        <a class="next" href="#runlist-sec">Back to the collection cards</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section id="settings">
+    <h2 class="sec">Settings and customization</h2>
+    <p>The <strong>Settings</strong> button at the top opens everything that can be tuned.</p>
+    <div class="tw"><table class="kv">
+      <thead><tr><th>Setting</th><th>What it controls</th></tr></thead>
+      <tbody>
+        <tr><td>Well-known port ceiling</td><td>When nothing in the data says which side opened a connection, the endpoint with the lower or better-known port is treated as the server. Raise it if your environment puts services on high ports.</td></tr>
+        <tr><td>Ephemeral range</td><td>Default source-port range written to listener rows.</td></tr>
+        <tr><td>Minimum packets per flow</td><td>The fastest way to strip scan noise out of a large capture. Set it to 3 or 5 and single-packet probes disappear.</td></tr>
+        <tr><td>Max packets to read</td><td>Keeps the browser responsive on very large captures. Reading stops at this limit.</td></tr>
+        <tr><td>ICMP / other protocols / multicast</td><td>Toggles for what a capture contributes beyond TCP and UDP.</td></tr>
+        <tr><td>Custom service names</td><td>One per line: <code>9997 = splunk-forwarder</code>, or <code>TCP/8443 = vendor-mgmt-gui</code>. Overrides the built-in port table everywhere — table, exports, and diagram — so your own applications get named instead of showing a bare port.</td></tr>
+        <tr><td>Custom boundary tags</td><td>Add your own alongside the built-ins, e.g. a cross-domain solution or a vendor maintenance path.</td></tr>
+        <tr><td>Visible columns</td><td>Hide what you do not use. Hidden columns leave the exports too.</td></tr>
+        <tr><td>Import defaults</td><td>Default enclave and collector, pre-filled on every import.</td></tr>
+        <tr><td>Internal ranges</td><td>Extra CIDRs counted as inside the boundary, beyond RFC1918. Set this if your enclave uses public or otherwise non-private space, or identification coverage will read low for no reason.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note tip">
+      <p>Custom service names are the setting worth investing in early. Once your program's ports are named, every future import produces a register that reads properly instead of a wall of bare port numbers.</p>
+    </div>
+  </section>
+
+  <!-- ============ TROUBLESHOOTING ============ -->
+  <section id="trouble">
+    <h2 class="sec">Troubleshooting</h2>
+    <p>Select a symptom for the cause and the fix.</p>
+
+    <details class="ts"><summary>File imports as 0 entries</summary><div class="body">
+      <p>Almost always the wrong export format — nmap normal output instead of <code>-oX</code> XML, or a Tenable CSV/HTML instead of <code>.nessus</code>. The popup names the specific problem.</p></div></details>
+
+    <details class="ts"><summary>"N entries · 0 shown"</summary><div class="body">
+      <p>A filter is hiding the rows. Clear the search box and the dropdowns, and check you are not on a later page. The data is there.</p></div></details>
+
+    <details class="ts"><summary>Nothing happens on drop</summary><div class="body">
+      <p>Not a real browser tab — a preview pane, document viewer, or Protected View. Confirm the address bar shows <code>file://</code> and reopen in a browser.</p></div></details>
+
+    <details class="ts"><summary>"Could not be read"</summary><div class="body">
+      <p>File is locked, open elsewhere, on a restricted path, or blocked by endpoint policy. Copy it to a local folder you own.</p></div></details>
+
+    <details class="ts"><summary>Capture imports as binary error</summary><div class="body">
+      <p>The file is probably gzip-compressed (<code>.pcap.gz</code>). Decompress it first. Compressed captures are not read directly.</p></div></details>
+
+    <details class="ts"><summary>Huge capture is slow</summary><div class="body">
+      <p>Lower <em>Max packets to read</em>, and raise <em>Minimum packets per flow</em>, in Settings.</p></div></details>
+
+    <details class="ts"><summary>Client and server look backwards</summary><div class="body">
+      <p>The capture had no TCP handshake to learn from, so the port heuristic guessed. Adjust the well-known port ceiling, or fix the affected rows with bulk-apply.</p></div></details>
+
+    <details class="ts"><summary>Diagram is empty or stale</summary><div class="body">
+      <p>It is generated on demand. Click <em>Generate / Refresh</em> after importing or editing.</p></div></details>
+
+    <details class="ts"><summary>Identification coverage looks too low</summary><div class="body">
+      <p>Your enclave probably uses address space outside RFC1918, so internal systems are being scored as external. Add the ranges under <em>Settings → Internal ranges</em>.</p></div></details>
+
+    <details class="ts"><summary>Host inventory file learns nothing</summary><div class="body">
+      <p>It needs both an IP column and a name column. If the names were already known the tool says so rather than counting them again.</p></div></details>
+
+    <details class="ts"><summary>Hostnames did not fill in</summary><div class="body">
+      <p><em>Load Host Inventory</em> resolves at load time. After importing more flow data, click <em>Resolve Hostnames</em> to apply the inventory to the new rows.</p></div></details>
+
+    <div class="note">
+      <p>If something still is not working, run <strong>Self-Test</strong>. If it comes back green the tool is fine and the problem is the input file; if it comes back red, note the browser and version and which checks failed.</p>
+    </div>
+  </section>
+
+  <!-- ============ WORKING ORDER ============ -->
+
+
+  <p class="empty" id="noResults" style="display:none">No matches in this document. Clear the search to return to the full procedure.</p>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var main = document.getElementById('main');
+
+  /* ---------- theme ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', function(){
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+    themeBtn.textContent = dark ? 'Dark' : 'Light';
+  });
+
+  /* ---------- print ---------- */
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+  var reopen = [];
+  window.addEventListener('beforeprint', function(){
+    reopen = [];
+    Array.prototype.forEach.call(document.querySelectorAll('details'), function(d){
+      if(!d.open){ reopen.push(d); d.open = true; }
+    });
+  });
+  window.addEventListener('afterprint', function(){
+    reopen.forEach(function(d){ d.open = false; });
+    reopen = [];
+  });
+
+  /* ---------- copy buttons ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.cmd'), function(box){
+    var pre = box.querySelector('pre');
+    var bar = box.querySelector('.cmd-bar');
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'copy'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function(){
+      var text = pre.textContent;
+      var done = function(ok){
+        btn.textContent = ok ? 'Copied' : 'Select manually';
+        btn.classList.toggle('copied', ok);
+        setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+      };
+      var fallback = function(){
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly','');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch(e) { ok = false; }
+        document.body.removeChild(ta);
+        done(ok);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){ done(true); }, fallback);
+      } else { fallback(); }
+    });
+    bar.appendChild(btn);
+  });
+
+  /* ---------- step progress ---------- */
+  var fill = document.getElementById('fill');
+  var progressText = document.getElementById('progressText');
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[data-check]'));
+
+  function syncSteps(){
+    var done = 0;
+    boxes.forEach(function(b){
+      var n = b.getAttribute('data-check');
+      var art = document.getElementById('step' + n);
+      var nav = document.querySelector('[data-navstep="' + n + '"]');
+      if(b.checked){ done++; }
+      if(art) art.classList.toggle('done', b.checked);
+      if(nav) nav.classList.toggle('done', b.checked);
+    });
+    fill.style.width = (done / boxes.length * 100) + '%';
+    progressText.textContent = done + ' of ' + boxes.length + ' steps marked complete';
+  }
+  boxes.forEach(function(b){ b.addEventListener('change', syncSteps); });
+  syncSteps();
+
+  /* ---------- collection path + Done / N/A, remembered between visits ---------- */
+  var RUNKEY  = 'ppsmRunList';
+  var PATHKEY = 'ppsmRunPath';
+  var runCount = document.getElementById('runCount');
+  var curPath = 's';
+
+  function pathBoxes(p){
+    return Array.prototype.slice.call(
+      document.querySelectorAll('input[data-path="' + p + '"]'));
+  }
+  function saveRuns(){
+    try{
+      var s = {};
+      ['s','m'].forEach(function(p){
+        pathBoxes(p).forEach(function(b){
+          if(b.checked) s[p + '-' + b.getAttribute('data-run') + '-' + b.getAttribute('data-mark')] = 1;
+        });
+      });
+      localStorage.setItem(RUNKEY, JSON.stringify(s));
+      localStorage.setItem(PATHKEY, curPath);
+    }catch(e){}
+  }
+  function loadRuns(){
+    try{
+      var s = JSON.parse(localStorage.getItem(RUNKEY) || '{}');
+      ['s','m'].forEach(function(p){
+        pathBoxes(p).forEach(function(b){
+          b.checked = !!s[p + '-' + b.getAttribute('data-run') + '-' + b.getAttribute('data-mark')];
+        });
+      });
+      var p = localStorage.getItem(PATHKEY);
+      if(p === 's' || p === 'm') curPath = p;
+    }catch(e){}
+  }
+  function syncRuns(){
+    var handled = 0, total = 0, seen = {};
+    pathBoxes(curPath).forEach(function(b){
+      var n = b.getAttribute('data-run');
+      if(!seen[n]){ seen[n] = true; total++; }
+    });
+    Object.keys(seen).forEach(function(n){
+      var li = document.getElementById('run-' + curPath + '-' + n);
+      var d = document.querySelector('input[data-path="' + curPath + '"][data-run="' + n + '"][data-mark="done"]');
+      var a = document.querySelector('input[data-path="' + curPath + '"][data-run="' + n + '"][data-mark="na"]');
+      if(!li) return;
+      li.classList.toggle('done', !!(d && d.checked));
+      li.classList.toggle('na', !!(a && a.checked) && !(d && d.checked));
+      if((d && d.checked) || (a && a.checked)) handled++;
+    });
+    var label = handled + ' of ' + total + ' handled';
+    if(runCount) runCount.textContent = label;
+    var rail = document.getElementById('railRuns');
+    if(rail) rail.textContent = label + ' \u00b7 ' +
+      (curPath === 's' ? 'scripted' : 'manual') + ' collection';
+  }
+  function showPath(p){
+    curPath = p;
+    var ls = document.getElementById('runlist-s');
+    var lm = document.getElementById('runlist-m');
+    if(ls) ls.hidden = (p !== 's');
+    if(lm) lm.hidden = (p !== 'm');
+    var bs = document.getElementById('pathScript');
+    var bm = document.getElementById('pathManual');
+    if(bs){ bs.classList.toggle('on', p === 's'); bs.setAttribute('aria-selected', p === 's'); }
+    if(bm){ bm.classList.toggle('on', p === 'm'); bm.setAttribute('aria-selected', p === 'm'); }
+    syncRuns(); saveRuns();
+  }
+  var bS = document.getElementById('pathScript');
+  var bM = document.getElementById('pathManual');
+  if(bS) bS.addEventListener('click', function(){ showPath('s'); });
+  if(bM) bM.addEventListener('click', function(){ showPath('m'); });
+
+  Array.prototype.slice.call(document.querySelectorAll('input[data-path]')).forEach(function(b){
+    b.addEventListener('change', function(){
+      if(b.checked){   // Done and N/A are mutually exclusive
+        var p = b.getAttribute('data-path'), n = b.getAttribute('data-run');
+        var other = b.getAttribute('data-mark') === 'done' ? 'na' : 'done';
+        var o = document.querySelector('input[data-path="' + p + '"][data-run="' + n + '"][data-mark="' + other + '"]');
+        if(o) o.checked = false;
+      }
+      syncRuns(); saveRuns();
+    });
+  });
+  var runReset = document.getElementById('runReset');
+  if(runReset) runReset.addEventListener('click', function(){
+    pathBoxes(curPath).forEach(function(b){ b.checked = false; });
+    syncRuns(); saveRuns();
+  });
+  loadRuns(); showPath(curPath);
+
+  /* ---------- working-order checklist ---------- */
+  var ckBoxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+  var orderCount = document.getElementById('orderCount');
+  function syncOrder(){
+    var n = 0;
+    ckBoxes.forEach(function(b){
+      b.parentNode.classList.toggle('on', b.checked);
+      if(b.checked) n++;
+    });
+    if(orderCount) orderCount.textContent = n + ' of ' + ckBoxes.length + ' complete';
+  }
+  ckBoxes.forEach(function(b){ b.addEventListener('change', syncOrder); });
+  syncOrder();
+
+  /* ---------- scroll spy ---------- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('nav.rail a'));
+  var targets = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  function setActive(id){
+    navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+  }
+  if('IntersectionObserver' in window){
+    var visible = {};
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting; });
+      for(var i = 0; i < targets.length; i++){
+        if(visible[targets[i].id]){ setActive(targets[i].id); break; }
+      }
+    }, { rootMargin: '-80px 0px -65% 0px' });
+    targets.forEach(function(t){ io.observe(t); });
+  }
+
+  /* ---------- search ---------- */
+  var q = document.getElementById('q');
+  var wrap = document.getElementById('searchWrap');
+  var hits = document.getElementById('hits');
+  var noResults = document.getElementById('noResults');
+  var units = Array.prototype.slice.call(
+    main.querySelectorAll('section > p, section > ul > li, section > ol > li, .step p, .step li, .step h4, .cmd, .note, .tw tbody tr, details.ts, .legend div, ol.checklist li')
+  );
+  var containers = Array.prototype.slice.call(main.querySelectorAll('section, .step, .tw, .legend, details.ts'));
+
+  function unmark(root){
+    Array.prototype.forEach.call(root.querySelectorAll('mark'), function(m){
+      var p = m.parentNode;
+      p.replaceChild(document.createTextNode(m.textContent), m);
+      p.normalize();
+    });
+  }
+  function markIn(el, needle){
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], n;
+    while((n = walker.nextNode())){ nodes.push(n); }
+    nodes.forEach(function(node){
+      var lower = node.nodeValue.toLowerCase();
+      var idx = lower.indexOf(needle);
+      if(idx < 0) return;
+      var frag = document.createDocumentFragment();
+      var rest = node.nodeValue, pos = 0, low = lower;
+      while((pos = low.indexOf(needle)) > -1){
+        frag.appendChild(document.createTextNode(rest.slice(0, pos)));
+        var mk = document.createElement('mark');
+        mk.textContent = rest.slice(pos, pos + needle.length);
+        frag.appendChild(mk);
+        rest = rest.slice(pos + needle.length);
+        low = rest.toLowerCase();
+      }
+      frag.appendChild(document.createTextNode(rest));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+  function reset(){
+    unmark(main);
+    units.forEach(function(u){ u.classList.remove('hide'); });
+    containers.forEach(function(c){ c.classList.remove('hide'); });
+    Array.prototype.forEach.call(main.querySelectorAll('h3, h4, .step-foot, .hero, .step-head'), function(e){ e.classList.remove('hide'); });
+    navLinks.forEach(function(a){ a.classList.remove('dim'); });
+    hits.textContent = '';
+    noResults.style.display = 'none';
+    wrap.classList.remove('has-value');
+  }
+  function run(){
+    var term = q.value.trim().toLowerCase();
+    unmark(main);
+    if(term.length < 2){ reset(); if(term.length === 1) wrap.classList.add('has-value'); return; }
+    wrap.classList.add('has-value');
+    var count = 0;
+    units.forEach(function(u){
+      var hit = u.textContent.toLowerCase().indexOf(term) > -1;
+      u.classList.toggle('hide', !hit);
+      if(hit){ count++; markIn(u, term); }
+    });
+    document.querySelector('.hero').classList.add('hide');
+    // hide empty containers, innermost first
+    ['details.ts', '.legend', '.tw', '.step', 'section'].forEach(function(sel){
+      Array.prototype.forEach.call(main.querySelectorAll(sel), function(c){
+        var any = Array.prototype.some.call(c.querySelectorAll('*'), function(el){
+          return units.indexOf(el) > -1 && !el.classList.contains('hide');
+        });
+        c.classList.toggle('hide', !any);
+      });
+    });
+    Array.prototype.forEach.call(main.querySelectorAll('.step-foot'), function(f){ f.classList.add('hide'); });
+    Array.prototype.forEach.call(document.querySelectorAll('details.ts'), function(d){
+      if(!d.classList.contains('hide')) d.open = true;
+    });
+    navLinks.forEach(function(a){
+      var t = document.querySelector(a.getAttribute('href'));
+      a.classList.toggle('dim', !t || t.classList.contains('hide'));
+    });
+    hits.textContent = count + (count === 1 ? ' match' : ' matches');
+    noResults.style.display = count ? 'none' : 'block';
+  }
+  var t;
+  q.addEventListener('input', function(){ clearTimeout(t); t = setTimeout(run, 120); });
+  q.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ q.value = ''; reset(); } });
+  document.getElementById('clearQ').addEventListener('click', function(){ q.value = ''; reset(); q.focus(); });
+  document.addEventListener('keydown', function(e){
+    if((e.ctrlKey || e.metaKey) && e.key === 'f'){ e.preventDefault(); q.focus(); q.select(); }
+  });
+})();
+</script>
+</body>
+</html>

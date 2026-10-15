@@ -1,0 +1,14 @@
+; forward zone for range2.mil
+$TTL 1h
+$ORIGIN range2.mil.
+@       IN SOA ns1.range2.mil. hostmaster.range2.mil. (
+              2026020201 ; serial
+              3600 900 604800 300 )
+        IN NS  ns1
+ns1     IN A   172.22.40.2
+wsus11  3600 IN A 172.22.40.11
+oradb12      IN A 172.22.40.12
+             IN AAAA fd00::12
+addc20  1d   IN A 172.22.40.20
+patch        IN CNAME wsus11
+db.range2.mil.  IN CNAME oradb12.range2.mil.

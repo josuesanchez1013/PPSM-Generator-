@@ -1,0 +1,5 @@
+name,type,data,timestamp
+wsus11.range2.mil,A,172.22.40.11,2026-09-01T08:00:00Z
+oradb12.range2.mil,A,172.22.40.12,2026-09-01T08:00:00Z
+patch.range2.mil,CNAME,wsus11.range2.mil,2026-09-01T08:00:00Z
+11.40.22.172.in-addr.arpa,PTR,wsus11.range2.mil,t

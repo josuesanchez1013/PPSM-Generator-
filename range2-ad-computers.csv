@@ -1,0 +1,13 @@
+Name,DNSHostName,IPv4Address,OperatingSystem,Owner,Description
+ANALYST61,analyst61.range2.mil,172.22.14.61,Windows 11 Enterprise,Ops Team,Analyst workstation
+ANALYST62,analyst62.range2.mil,172.22.14.62,Windows 11 Enterprise,Ops Team,Analyst workstation
+ANALYST63,analyst63.range2.mil,172.22.14.63,Windows 11 Enterprise,Ops Team,Analyst workstation
+FWD70,fwd70.range2.mil,172.22.14.70,Windows Server 2022,Cyber Ops,Log forwarder
+KIOSK80,kiosk80.range2.mil,172.22.14.80,Windows 11 Enterprise,Facilities,Shared kiosk
+WSUS11,wsus11.range2.mil,172.22.40.11,Windows Server 2022,Infrastructure,Patch distribution
+ORADB12,oradb12.range2.mil,172.22.40.12,Oracle Linux 9,Database Team,Mission database
+ADDC20,addc20.range2.mil,172.22.40.20,Windows Server 2022,Directory Services,Domain controller
+NTP30,ntp30.range2.mil,172.22.40.30,Red Hat Enterprise Linux 9,Infrastructure,Time source
+VENDOR44,vendor44.range2.mil,172.22.40.44,Appliance OS,Vendor Support,Vendor management appliance
+SYSLOG05,syslog05.range2.mil,172.22.60.5,Red Hat Enterprise Linux 9,Cyber Ops,Syslog collector
+SPLIDX09,splidx09.range2.mil,172.22.60.9,Red Hat Enterprise Linux 9,Cyber Ops,Splunk indexer

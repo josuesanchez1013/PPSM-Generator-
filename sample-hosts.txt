@@ -1,0 +1,19 @@
+# Range host file — copy of /etc/hosts
+127.0.0.1       localhost
+::1             localhost
+
+# Workstations
+10.20.10.50     wks-050.range.mil       wks-050
+10.20.10.51     wks-051.range.mil       wks-051
+10.20.10.55     wks-055.range.mil       wks-055
+10.20.10.60     wks-060.range.mil       wks-060
+10.20.10.62     wks-062.range.mil       wks-062
+10.20.10.77     splunk-fwd-77.range.mil splunk-fwd-77
+
+# Servers
+10.20.30.15     sql01.range.mil         sql01
+10.20.30.20     file01.range.mil        file01
+10.20.30.30     dc01.range.mil          dc01
+10.20.40.9      splunk-idx01.range.mil  splunk-idx01
+10.20.40.5      netmon01.range.mil      netmon01
+10.20.5.10      dns01.range.mil         dns01

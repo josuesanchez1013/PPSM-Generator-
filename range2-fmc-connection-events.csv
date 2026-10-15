@@ -1,0 +1,10 @@
+Connection Events
+Report generated: 2026-02-02 08:30:00
+Filter: Initiator IP is in 172.22.0.0/16
+First Packet,Last Packet,Action,Reason,Initiator IP,Responder IP,Security Zone (Initiator),Security Zone (Responder),Source Port / ICMP Type,Destination Port / ICMP Code,Protocol,Application Protocol,Client,Web Application,Access Control Policy,Access Control Rule,Ingress Interface,Egress Interface,Initiator Packets,Responder Packets,Initiator Bytes,Responder Bytes
+2026-02-02 08:11:04,2026-02-02 08:11:31,Allow,,172.22.14.61,172.22.40.11,INSIDE,DMZ,51188,8530,TCP,HTTP,Windows Update,,RANGE2-ACP,Allow-WSUS,inside,dmz,1840,2100,220400,980210
+2026-02-02 08:12:02,2026-02-02 08:12:44,Allow,,172.22.14.62,172.22.40.12,INSIDE,DMZ,50441,1521,TCP,Oracle TNS,,,RANGE2-ACP,Allow-Oracle,inside,dmz,412,388,71230,90210
+2026-02-02 08:13:10,2026-02-02 08:29:55,Allow,,172.22.14.70,172.22.60.9,INSIDE,MGMT,52990,9997,TCP,,Splunk Forwarder,,RANGE2-ACP,Allow-Splunk-Fwd,inside,mgmt,2201,140,998210,12400
+2026-02-02 08:14:22,2026-02-02 08:14:26,Allow,,172.22.14.63,172.22.40.20,INSIDE,DMZ,53881,636,TCP,LDAPS,,,RANGE2-ACP,Allow-DirSvc,inside,dmz,74,66,8890,9120
+2026-02-02 08:15:01,2026-02-02 08:15:09,Block,Intrusion Block,172.22.14.99,172.22.40.12,INSIDE,DMZ,40001,3306,TCP,MySQL,,,RANGE2-ACP,Default Action,inside,dmz,2,0,120,0
+2026-02-02 08:16:40,2026-02-02 08:17:02,Allow,,172.22.14.61,140.82.121.4,INSIDE,OUTSIDE,51002,443,TCP,HTTPS,,GitHub,RANGE2-ACP,Allow-Outbound-Web,inside,outside,88,140,44120,881200

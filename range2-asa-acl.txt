@@ -1,0 +1,26 @@
+: Saved
+ASA Version 9.18(2)
+!
+object-group network DMZ-SERVERS
+ network-object host 172.22.40.11
+ network-object host 172.22.40.12
+ network-object host 172.22.40.20
+object-group network ANALYSTS
+ network-object 172.22.14.0 255.255.255.0
+object-group service WEB-MGMT tcp
+ port-object eq 443
+ port-object eq 8443
+!
+access-list INSIDE_IN extended permit tcp object-group ANALYSTS object-group DMZ-SERVERS object-group WEB-MGMT
+access-list INSIDE_IN extended permit tcp 172.22.14.0 255.255.255.0 host 172.22.40.12 eq 1521
+access-list INSIDE_IN extended permit tcp host 172.22.14.70 host 172.22.60.9 eq 9997
+access-list INSIDE_IN extended permit udp 172.22.14.0 255.255.255.0 host 172.22.40.30 eq ntp
+access-list INSIDE_IN extended permit tcp any host 172.22.40.44 eq 8443
+access-list INSIDE_IN extended permit tcp 172.22.14.0 255.255.255.0 host 172.22.40.20 eq ldaps
+access-list INSIDE_IN extended permit tcp host 172.22.14.61 host 172.22.40.99 eq 3306
+access-list INSIDE_IN extended deny ip any any log
+!
+ip access-list extended MGMT_ACL
+ permit tcp 172.22.14.0 0.0.0.255 host 172.22.60.5 eq syslog
+ permit udp 172.22.14.0 0.0.0.255 host 172.22.60.5 eq 514
+ deny   ip any any

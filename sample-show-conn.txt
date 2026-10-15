@@ -1,0 +1,14 @@
+firewall# show conn all
+28 in use, 91 most used
+TCP outside 74.125.24.100:443 inside 10.20.10.50:54321, idle 0:00:02, bytes 54231, flags UIO
+TCP outside 23.45.67.89:443 inside 10.20.10.51:49876, idle 0:00:11, bytes 8820, flags UIO
+UDP outside 10.20.5.10:53 inside 10.20.10.50:51234, idle 0:00:10, bytes 1288, flags -
+TCP inside 10.20.10.50:52000 dmz 10.20.30.15:1433, idle 0:00:01, bytes 90210, flags UfIO
+TCP inside 10.20.10.77:41000 mgmt 10.20.40.9:9997, idle 0:00:03, bytes 774512, flags UIO
+TCP inside 10.20.10.60:50122 dmz 10.20.30.20:445, idle 0:00:07, bytes 15340, flags UIO
+TCP outside 52.109.12.30:443 inside 10.20.10.62:53001, idle 0:00:04, bytes 22110, flags UIO
+UDP inside 10.20.10.50:38000 mgmt 10.20.40.5:161, idle 0:00:20, bytes 640, flags -
+TCP inside 10.20.10.55:52233 dmz 10.20.30.30:389, idle 0:00:02, bytes 4400, flags UIO
+TCP inside 10.20.10.55:52240 dmz 10.20.30.30:636, idle 0:00:02, bytes 6120, flags UIO
+TCP inside 10.20.10.51:53300 dmz 10.20.30.99:8443, idle 0:00:05, bytes 3300, flags UIO
+TCP inside 10.20.10.91:49000 dmz 10.20.30.20:9100, idle 0:00:15, bytes 880, flags UIO

@@ -1,0 +1,2 @@
+127.0.0.1   localhost
+172.22.14.99  scanner99.range2.mil  scanner99

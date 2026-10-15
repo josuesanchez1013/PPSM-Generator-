@@ -1,0 +1,4 @@
+Intrusion Events
+Time,Priority,Impact,Inline Result,Source IP,Destination IP,Source Port / ICMP Type,Destination Port / ICMP Code,Protocol,Application Protocol,Message,Classification
+2026-02-02 08:15:02,high,1,Blocked,172.22.14.99,172.22.40.12,40001,3306,TCP,MySQL,SQL injection attempt,Web Application Attack
+2026-02-02 08:15:44,medium,2,Would Block,172.22.14.99,172.22.14.61,40010,3389,TCP,RDP,RDP brute force,Attempted Admin Privilege Gain

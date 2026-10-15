@@ -1,0 +1,10 @@
+FTD01# show conn all
+41 in use, 118 most used
+TCP outside 140.82.121.4:443 inside 172.22.14.61:51002, idle 0:00:03, bytes 44120, flags UIO
+TCP inside 172.22.14.61:51188 dmz 172.22.40.11:8530, idle 0:00:06, bytes 220400, flags UIO
+TCP inside 172.22.14.62:50441 dmz 172.22.40.12:1521, idle 0:00:02, bytes 71230, flags UfIO
+UDP inside 172.22.14.61:44012 mgmt 172.22.60.5:514, idle 0:00:12, bytes 3120, flags -
+TCP inside 172.22.14.70:52990 mgmt 172.22.60.9:9997, idle 0:00:01, bytes 998210, flags UIO
+TCP inside 172.22.14.63:53881 dmz 172.22.40.20:636, idle 0:00:04, bytes 8890, flags UIO
+UDP inside 172.22.14.61:38771 dmz 172.22.40.30:123, idle 0:00:09, bytes 480, flags -
+TCP inside 172.22.14.80:49331 dmz 172.22.40.44:8443, idle 0:00:07, bytes 15600, flags UIO

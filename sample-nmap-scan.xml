@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nmaprun scanner="nmap" args="nmap -sS -sV -oX scan.xml 10.20.30.0/24" version="7.94">
+  <host>
+    <status state="up"/>
+    <address addr="10.20.30.15" addrtype="ipv4"/>
+    <hostnames><hostname name="sql01.range.mil" type="PTR"/></hostnames>
+    <ports>
+      <port protocol="tcp" portid="1433"><state state="open"/>
+        <service name="ms-sql-s" product="Microsoft SQL Server" version="2022"/></port>
+    </ports>
+  </host>
+  <host>
+    <status state="up"/>
+    <address addr="10.20.30.20" addrtype="ipv4"/>
+    <hostnames><hostname name="file01.range.mil" type="PTR"/></hostnames>
+    <ports>
+      <port protocol="tcp" portid="445"><state state="open"/>
+        <service name="microsoft-ds" product="Windows Server 2019"/></port>
+      <port protocol="tcp" portid="9100"><state state="open"/>
+        <service name="jetdirect" product="HP JetDirect"/></port>
+    </ports>
+  </host>
+  <host>
+    <status state="up"/>
+    <address addr="10.20.30.30" addrtype="ipv4"/>
+    <hostnames><hostname name="dc01.range.mil" type="PTR"/></hostnames>
+    <ports>
+      <port protocol="tcp" portid="389"><state state="open"/>
+        <service name="ldap" product="Microsoft Windows Active Directory LDAP"/></port>
+      <port protocol="tcp" portid="636"><state state="open"/>
+        <service name="ldapssl" product="Microsoft Windows Active Directory LDAP"/></port>
+    </ports>
+  </host>
+  <host>
+    <status state="up"/>
+    <address addr="10.20.30.99" addrtype="ipv4"/>
+    <hostnames><hostname name="vendor-appliance-01.range.mil" type="PTR"/></hostnames>
+    <ports>
+      <port protocol="tcp" portid="8443"><state state="open"/>
+        <service name="https-alt" product="Vendor Management GUI"/></port>
+    </ports>
+  </host>
+</nmaprun>

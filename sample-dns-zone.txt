@@ -1,0 +1,13 @@
+$ORIGIN range.mil.
+$TTL 3600
+@       IN  SOA dns01.range.mil. admin.range.mil. ( 2026010101 3600 900 604800 86400 )
+        IN  NS  dns01.range.mil.
+
+dns01           IN  A   10.20.5.10
+dc01            IN  A   10.20.30.30
+sql01           IN  A   10.20.30.15
+file01          IN  A   10.20.30.20
+splunk-idx01    IN  A   10.20.40.9
+netmon01   3600 IN  A   10.20.40.5
+wks-050         IN  A   10.20.10.50
+wks-051         IN  A   10.20.10.51
